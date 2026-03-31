@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lem-viewer"
+version = "0.1.0"
+description = "Interactive multi-channel terrain viewer for LEM-Diffusion"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "PySide6>=6.6",
+    "pyqtgraph>=0.13",
+    "PyOpenGL>=3.1",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+]
+hdf5 = ["h5py>=3.10"]
+zarr = ["zarr>=2.16"]
+
+[project.scripts]
+lem-viewer = "lem_viewer.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
