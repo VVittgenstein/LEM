@@ -1,5 +1,7 @@
 # Virtual environment
 lem-env/
+lem-env-win/
+.venv/
 
 # Generated output
 output/
@@ -9,6 +11,11 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 dist/
 build/
 
