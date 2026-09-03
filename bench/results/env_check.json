@@ -1,0 +1,152 @@
+{
+  "python": "3.12.14 | packaged by conda-forge | (main, Aug 21 2026, 22:37:19) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "F:\\LEM\\lem-env\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "imports": {
+    "numpy": {
+      "ok": true,
+      "version": "2.5.2"
+    },
+    "scipy": {
+      "ok": true,
+      "version": "1.18.0"
+    },
+    "numba": {
+      "ok": true,
+      "version": "0.67.0"
+    },
+    "xarray": {
+      "ok": true,
+      "version": "2026.7.0"
+    },
+    "zarr": {
+      "ok": true,
+      "version": "3.3.0"
+    },
+    "xsimlab": {
+      "ok": true,
+      "version": "0.5.0"
+    },
+    "landlab": {
+      "ok": true,
+      "version": "2.10.1"
+    },
+    "fastscape": {
+      "ok": true,
+      "version": "0.1.0"
+    },
+    "fastscapelib_fortran": {
+      "ok": true,
+      "version": "n/a"
+    },
+    "richdem": {
+      "ok": true,
+      "version": "2.4.3"
+    },
+    "psutil": {
+      "ok": true,
+      "version": "7.2.2"
+    },
+    "dask": {
+      "ok": true,
+      "version": "2026.8.0"
+    },
+    "matplotlib": {
+      "ok": true,
+      "version": "3.11.1"
+    }
+  },
+  "landlab_min_run": {
+    "DepressionFinderAndRouter": {
+      "ok": true,
+      "seconds_total": 0.05095749999964028,
+      "steps": 5,
+      "z_min": 0.0021894308231216186,
+      "z_max": 5.9902850588136545,
+      "z_finite": true,
+      "A_min_core": 1000000.0,
+      "A_max": 235000000.0,
+      "A_finite": true,
+      "cell_area": 1000000.0,
+      "node_fields": [
+        "depression__depth",
+        "depression__outlet_node",
+        "drainage_area",
+        "flood_status_code",
+        "flow__data_structure_delta",
+        "flow__link_to_receiver_node",
+        "flow__receiver_node",
+        "flow__sink_flag",
+        "flow__upstream_node_order",
+        "is_pit",
+        "surface_water__discharge",
+        "topographic__elevation",
+        "topographic__steepest_slope",
+        "water__unit_flux_in"
+      ]
+    },
+    "LakeMapperBarnes": {
+      "ok": true,
+      "seconds_total": 0.1992967000005592,
+      "steps": 5,
+      "z_min": 0.0021894308231216186,
+      "z_max": 5.991421507778199,
+      "z_finite": true,
+      "A_min_core": 1000000.0,
+      "A_max": 218000000.0,
+      "A_finite": true,
+      "cell_area": 1000000.0,
+      "node_fields": [
+        "drainage_area",
+        "flood_status_code",
+        "flow__data_structure_delta",
+        "flow__link_to_receiver_node",
+        "flow__receiver_node",
+        "flow__sink_flag",
+        "flow__upstream_node_order",
+        "surface_water__discharge",
+        "topographic__elevation",
+        "topographic__steepest_slope",
+        "water__unit_flux_in"
+      ]
+    },
+    "PriorityFloodFlowRouter": {
+      "ok": true,
+      "seconds_total": 0.045068999999784864,
+      "steps": 5,
+      "z_min": 0.0021894308231216186,
+      "z_max": 5.991413261200735,
+      "z_finite": true,
+      "A_min_core": 1000000.0,
+      "A_max": 217000000.0,
+      "A_finite": true,
+      "cell_area": 1000000.0,
+      "node_fields": [
+        "depression_free_elevation",
+        "drainage_area",
+        "flood_status_code",
+        "flow__link_to_receiver_node",
+        "flow__receiver_node",
+        "flow__receiver_proportions",
+        "flow__upstream_node_order",
+        "squared_length_adjacent",
+        "surface_water__discharge",
+        "topographic__elevation",
+        "topographic__steepest_slope",
+        "water__unit_flux_in"
+      ]
+    }
+  },
+  "fastscape_min_run": {
+    "memory_store": {
+      "ok": false,
+      "error": "AttributeError(\"module 'zarr' has no attribute 'MemoryStore'\")",
+      "traceback": "Traceback (most recent call last):\n  File \"F:\\LEM\\bench\\check_env.py\", line 136, in <module>\n    report[\"fastscape_min_run\"][\"memory_store\"] = fastscape_run(None)\n                                                  ^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\bench\\check_env.py\", line 125, in fastscape_run\n    out = in_ds.xsimlab.run(model=basic_model, store=store)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\xr_accessor.py\", line 809, in run\n    driver = XarraySimulationDriver(\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\drivers.py\", line 433, in __init__\n    self.store = ZarrSimulationStore(\n                 ^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\stores.py\", line 122, in __init__\n    self.zgroup = zarr.group(store=zarr.MemoryStore())\n                                   ^^^^^^^^^^^^^^^^\nAttributeError: module 'zarr' has no attribute 'MemoryStore'\n"
+    },
+    "directory_store": {
+      "ok": false,
+      "error": "AttributeError(\"module 'numpy' has no attribute 'in1d'\")",
+      "traceback": "Traceback (most recent call last):\n  File \"F:\\LEM\\bench\\check_env.py\", line 143, in <module>\n    report[\"fastscape_min_run\"][\"directory_store\"] = fastscape_run(str(p))\n                                                     ^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\bench\\check_env.py\", line 125, in fastscape_run\n    out = in_ds.xsimlab.run(model=basic_model, store=store)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\xr_accessor.py\", line 809, in run\n    driver = XarraySimulationDriver(\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\drivers.py\", line 433, in __init__\n    self.store = ZarrSimulationStore(\n                 ^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\stores.py\", line 128, in __init__\n    self.output_save_steps = dataset.xsimlab.get_output_save_steps()\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\xsimlab\\xr_accessor.py\", line 223, in get_output_save_steps\n    save_steps = np.in1d(self.master_clock_coord.values, coord.values)\n                 ^^^^^^^\n  File \"F:\\LEM\\lem-env\\Lib\\site-packages\\numpy\\__init__.py\", line 769, in __getattr__\n    raise AttributeError(f\"module {__name__!r} has no attribute {attr!r}\")\nAttributeError: module 'numpy' has no attribute 'in1d'\n"
+    }
+  }
+}

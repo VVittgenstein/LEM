@@ -29,3 +29,10 @@ Thumbs.db
 
 # Environment
 .env
+.claude/
+
+# Benchmark generated artifacts (arrays, renders, stores); scripts, logs and JSON results stay tracked
+bench/results/**/exports/
+bench/results/**/*.npy
+bench/results/**/*.zarr/
+bench/results/**/*.png

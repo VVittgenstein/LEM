@@ -1,0 +1,79 @@
+{
+ "run_id": "r0_K1e-06_elev_FS",
+ "status": "ok",
+ "started_utc": "2026-09-03T10:03:52.576962+00:00",
+ "finished_utc": "2026-09-03T10:03:53.057540+00:00",
+ "args": {
+  "tool": "fastscape",
+  "config": "FS",
+  "group": "elev",
+  "K": 1e-06,
+  "steps": 5,
+  "out": "F:\\LEM\\bench\\results\\L1\\runs\\r0_K1e-06_elev_FS.json",
+  "export_dir": "F:\\LEM\\bench\\results\\L1\\exports",
+  "nx": 500,
+  "ny": 500,
+  "dx": 1000.0,
+  "dt": 1000.0,
+  "seed": 1234,
+  "D": 0.01,
+  "U": 0.001,
+  "m": 0.4,
+  "n": 1.0,
+  "warm_steps": 5
+ },
+ "tool_version": "2.8.4",
+ "python": "3.12.14",
+ "platform": "Windows-11-10.0.26200-SP0",
+ "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+ "affinity": [
+  4
+ ],
+ "thread_env": {
+  "OMP_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1"
+ },
+ "t_import_s": 0.09402359999876353,
+ "t_setup_s": 0.006084500000724802,
+ "stats": {
+  "steps": 5,
+  "first_step_s": 0.07325249999848893,
+  "steady_mean_s": 0.0713876200003142,
+  "steady_median_s": 0.07104169999729493,
+  "steady_min_s": 0.0707131000017398,
+  "steady_max_s": 0.07325249999848893,
+  "sum_steps_s": 0.356938100001571,
+  "components_steady_mean_s": {}
+ },
+ "per_step": {
+  "uplift": [],
+  "route": [],
+  "accum": [],
+  "spl": [],
+  "diff": [],
+  "total": [
+   0.07325249999848893,
+   0.07086700000218116,
+   0.07106380000186618,
+   0.0707131000017398,
+   0.07104169999729493
+  ]
+ },
+ "export_s": {
+  "elev": 0.0028036000003339723
+ },
+ "peak_wset_MB": 107.6796875,
+ "rss_MB": 45.14453125,
+ "output": {
+  "z_min": 0.0008856438232965891,
+  "z_max": 5.999253631475583,
+  "z_finite": true,
+  "A_max": 102018000000.0,
+  "A_finite": true,
+  "flooded_nodes_final": 96463,
+  "A_min_core": 1000000.0
+ },
+ "wall_s": 0.5295861999984481
+}

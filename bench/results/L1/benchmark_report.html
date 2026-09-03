@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEM L1 性能基准</title>
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --o1:#86b6ef; --o2:#3987e5; --o3:#1c5cab;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --o1:#6da7ec; --o2:#2a78d6; --o3:#184f95;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --o1:#6da7ec; --o2:#2a78d6; --o3:#184f95;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+main{max-width:1180px;margin:0 auto;padding:32px 24px 64px}
+h1{font-size:26px;font-weight:600;margin:0 0 4px}
+h2{font-size:18px;font-weight:600;margin:40px 0 12px}
+p.lead{color:var(--ink2);margin:0 0 20px}
+p.note{color:var(--ink2);margin:8px 0 0;font-size:13px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:20px 0 8px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.tile-label{color:var(--ink2);font-size:13px}
+.tile-value{font-size:30px;font-weight:600;line-height:1.2;margin:4px 0 2px}
+.tile-value .unit{font-size:13px;font-weight:400;color:var(--ink2)}
+.tile-sub{color:var(--muted);font-size:12px}
+figure{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px 12px;margin:0 0 16px}
+figcaption{font-weight:600;margin-bottom:2px}
+.sub{color:var(--ink2);font-size:13px;margin-bottom:12px}
+.multiples{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px 28px}
+.panel-title{font-size:13px;color:var(--ink2);margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.key{display:inline-block;width:14px;height:3px;border-radius:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:4px 0 12px;color:var(--ink2);font-size:13px}
+.legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+svg{display:block;overflow:visible}
+svg text{font-family:inherit}
+.grid{stroke:var(--grid);stroke-width:1}
+.axis{stroke:var(--axis);stroke-width:1}
+.ref{stroke:var(--muted);stroke-width:1}
+.tick{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.label{fill:var(--ink2);font-size:12px}
+.value{fill:var(--ink);font-size:12px;font-variant-numeric:tabular-nums}
+.inlabel{font-size:11px;font-variant-numeric:tabular-nums;pointer-events:none}
+.mark{transition:opacity .12s}
+.hit{fill:transparent;cursor:default;outline:none}
+.hit:hover + .mark, .hit:focus + .mark{opacity:.78}
+.line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.dot{stroke:var(--surface);stroke-width:2}
+.cross{stroke:var(--axis);stroke-width:1}
+#tip{position:absolute;z-index:10;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);pointer-events:none;max-width:280px}
+#tip .tip-row{display:flex;gap:8px;align-items:baseline}
+#tip strong{font-variant-numeric:tabular-nums;font-weight:600}
+#tip span{color:var(--ink2)}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--ink2);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{color:var(--ink2);font-weight:600}
+td{font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.wrap td{white-space:normal}
+.wrap td:first-child{white-space:nowrap;color:var(--ink2);width:110px}
+ul.facts{margin:8px 0 0;padding-left:20px;color:var(--ink2)}
+ul.facts li{margin:4px 0}
+footer{color:var(--muted);font-size:12px;margin-top:40px}
+</style>
+</head>
+<body>
+<div id="tip" hidden></div>
+<main>
+<h1>LEM L1 性能基准</h1>
+<p class="lead">data1000m 生产设置（500×500 @ 1 km）下 Landlab 与 fastscape 的每步耗时、分部分耗时、内存与地形演化对照。99 次运行，总墙钟 5.5 小时，生成于 2026-09-03 11:55。</p>
+
+<div class="kpi"><div class="tile"><div class="tile-label">fastscape · execute_step</div><div class="tile-value">70<span class="unit"> ms/步</span></div><div class="tile-sub">基准 · 峰值内存 108 MB</div></div><div class="tile"><div class="tile-label">Landlab · PriorityFloodFlowRouter</div><div class="tile-value">1,988<span class="unit"> ms/步</span></div><div class="tile-sub">fastscape 的 28 倍 · 峰值内存 444 MB</div></div><div class="tile"><div class="tile-label">Landlab · DepressionFinderAndRouter</div><div class="tile-value">9,831<span class="unit"> ms/步</span></div><div class="tile-sub">fastscape 的 139 倍 · 峰值内存 508 MB</div></div><div class="tile"><div class="tile-label">Landlab · LakeMapperBarnes</div><div class="tile-value">9,895<span class="unit"> ms/步</span></div><div class="tile-sub">fastscape 的 140 倍 · 峰值内存 566 MB</div></div></div>
+<p class="note">稳态每步耗时：K = 1e-5，高程组，三轮中位数，排除每次运行前 5 步。倍数以 fastscape 为 1。</p>
+
+<h2>1. 每步耗时与 K 的关系</h2>
+<figure>
+<figcaption>稳态每步耗时（ms），按配置分面，每面各自的横轴</figcaption>
+<div class="sub">每面三条为 K 的三档。悬停显示轮间范围和“高程+汇水面积”组的数值。</div>
+<div class="multiples" id="fig-k"></div>
+<details><summary>数据表</summary><div class="scroll"><table><thead><tr><th>配置</th><th>K</th><th>组</th><th>轮数</th><th>每步 ms 中位</th><th>轮间范围</th><th>首步 ms</th><th>峰值内存 MB</th><th>导出 ms</th><th>第 50 步淹没格数</th><th>z 范围 m</th><th>A 最大 m²</th></tr></thead><tbody><tr><td>fastscape · execute_step</td><td>1e-6</td><td>高程</td><td>3</td><td>71</td><td>71 至 71</td><td>73</td><td>108</td><td>2.6</td><td>91,639</td><td>[0.0, 51.0]</td><td>1.02e+11</td></tr><tr><td>fastscape · execute_step</td><td>1e-6</td><td>高程+汇水面积</td><td>3</td><td>71</td><td>71 至 71</td><td>73</td><td>108</td><td>5.4</td><td>91,639</td><td>[0.0, 51.0]</td><td>1.02e+11</td></tr><tr><td>fastscape · execute_step</td><td>1e-5</td><td>高程</td><td>3</td><td>70</td><td>70 至 71</td><td>74</td><td>108</td><td>3.4</td><td>77,647</td><td>[0.0, 51.0]</td><td>1.01e+11</td></tr><tr><td>fastscape · execute_step</td><td>1e-5</td><td>高程+汇水面积</td><td>3</td><td>70</td><td>70 至 70</td><td>74</td><td>108</td><td>6.0</td><td>77,647</td><td>[0.0, 51.0]</td><td>1.01e+11</td></tr><tr><td>fastscape · execute_step</td><td>1e-4</td><td>高程</td><td>3</td><td>59</td><td>59 至 59</td><td>73</td><td>108</td><td>3.0</td><td>8,794</td><td>[0.0, 50.7]</td><td>9.98e+10</td></tr><tr><td>fastscape · execute_step</td><td>1e-4</td><td>高程+汇水面积</td><td>3</td><td>59</td><td>59 至 59</td><td>73</td><td>108</td><td>4.6</td><td>8,794</td><td>[0.0, 50.7]</td><td>9.98e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-6</td><td>高程</td><td>3</td><td>1,998</td><td>1,986 至 2,000</td><td>2,029</td><td>444</td><td>2.8</td><td>91,818</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-6</td><td>高程+汇水面积</td><td>3</td><td>1,995</td><td>1,982 至 2,000</td><td>2,029</td><td>445</td><td>4.8</td><td>91,818</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-5</td><td>高程</td><td>3</td><td>1,988</td><td>1,987 至 1,994</td><td>2,024</td><td>444</td><td>3.1</td><td>81,074</td><td>[0.0, 51.0]</td><td>5.05e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-5</td><td>高程+汇水面积</td><td>3</td><td>1,999</td><td>1,992 至 2,020</td><td>2,035</td><td>445</td><td>6.4</td><td>81,074</td><td>[0.0, 51.0]</td><td>5.05e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-4</td><td>高程</td><td>3</td><td>1,990</td><td>1,989 至 2,022</td><td>2,023</td><td>445</td><td>3.4</td><td>55,812</td><td>[0.0, 50.6]</td><td>2.85e+10</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1e-4</td><td>高程+汇水面积</td><td>3</td><td>2,001</td><td>1,986 至 2,002</td><td>2,030</td><td>445</td><td>4.7</td><td>55,812</td><td>[0.0, 50.6]</td><td>2.85e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-6</td><td>高程</td><td>3</td><td>10,154</td><td>9,836 至 10,298</td><td>10,557</td><td>508</td><td>2.7</td><td>91,730</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-6</td><td>高程+汇水面积</td><td>3</td><td>10,218</td><td>10,161 至 10,259</td><td>10,559</td><td>509</td><td>4.8</td><td>91,730</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-5</td><td>高程</td><td>3</td><td>9,831</td><td>9,821 至 9,851</td><td>10,522</td><td>508</td><td>2.6</td><td>80,129</td><td>[0.0, 51.0]</td><td>5.06e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-5</td><td>高程+汇水面积</td><td>3</td><td>9,945</td><td>9,941 至 9,956</td><td>10,551</td><td>508</td><td>6.1</td><td>80,129</td><td>[0.0, 51.0]</td><td>5.06e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-4</td><td>高程</td><td>3</td><td>8,569</td><td>8,542 至 8,586</td><td>10,566</td><td>508</td><td>2.9</td><td>54,609</td><td>[0.0, 50.6]</td><td>3.19e+10</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>1e-4</td><td>高程+汇水面积</td><td>3</td><td>8,575</td><td>8,571 至 8,584</td><td>10,530</td><td>507</td><td>6.1</td><td>54,609</td><td>[0.0, 50.6]</td><td>3.19e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-6</td><td>高程</td><td>3</td><td>9,563</td><td>9,556 至 9,622</td><td>9,314</td><td>562</td><td>2.6</td><td>未记录</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-6</td><td>高程+汇水面积</td><td>3</td><td>9,555</td><td>9,519 至 9,690</td><td>9,276</td><td>561</td><td>4.9</td><td>未记录</td><td>[0.0, 51.0]</td><td>5.07e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-5</td><td>高程</td><td>3</td><td>9,895</td><td>9,882 至 9,919</td><td>9,267</td><td>566</td><td>3.1</td><td>未记录</td><td>[0.0, 51.0]</td><td>5.06e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-5</td><td>高程+汇水面积</td><td>3</td><td>9,933</td><td>9,878 至 10,000</td><td>9,266</td><td>566</td><td>6.2</td><td>未记录</td><td>[0.0, 51.0]</td><td>5.06e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-4</td><td>高程</td><td>3</td><td>8,686</td><td>8,683 至 8,769</td><td>9,308</td><td>568</td><td>3.3</td><td>未记录</td><td>[0.0, 50.6]</td><td>5.04e+10</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>1e-4</td><td>高程+汇水面积</td><td>3</td><td>8,677</td><td>8,671 至 8,765</td><td>9,300</td><td>567</td><td>6.4</td><td>未记录</td><td>[0.0, 50.6]</td><td>5.04e+10</td></tr></tbody></table></div></details>
+</figure>
+
+<h2>2. 每步耗时的构成</h2>
+<figure>
+<figcaption>各环节占每步耗时的份额（K = 1e-5，高程组）</figcaption>
+<div class="sub">fastscape 的份额来自逐例程调用（与 execute_step 合计一致）；Landlab 的份额来自脚本对各组件的分别计时。累积在 Landlab 中包含于汇流。</div>
+<div class="legend" id="leg-comp"></div>
+<div id="fig-comp"></div>
+<details><summary>数据表（ms）</summary><div class="scroll"><table><thead><tr><th>配置</th><th>汇流与洼地处理</th><th>河道侵蚀</th><th>坡面扩散</th><th>累积</th><th>抬升</th><th>合计</th></tr></thead><tbody><tr><td>fastscape · execute_step</td><td>42.00</td><td>14.84</td><td>12.14</td><td>0.79</td><td>0.52</td><td>70.3</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>1,954.87</td><td>27.09</td><td>6.05</td><td>无此环节</td><td>0.46</td><td>1,988.4</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>9,799.66</td><td>24.69</td><td>6.19</td><td>无此环节</td><td>0.46</td><td>9,831.0</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>9,863.03</td><td>25.48</td><td>6.26</td><td>无此环节</td><td>0.46</td><td>9,895.2</td></tr></tbody></table></div></details>
+</figure>
+
+<h2>3. 50 步内每步耗时的变化</h2>
+<figure>
+<figcaption>每步耗时随步数的变化（K = 1e-5，高程组，三轮逐步中位数）</figcaption>
+<div class="sub">每面各自的纵轴；横轴为步序。悬停显示该步数值。</div>
+<div class="multiples" id="fig-series"></div>
+<details><summary>数据表（ms）</summary><div class="scroll"><table><thead><tr><th>步</th><th>fastscape · execute_step</th><th>Landlab · PriorityFloodFlowRouter</th><th>Landlab · DepressionFinderAndRouter</th><th>Landlab · LakeMapperBarnes</th></tr></thead><tbody><tr><td>1</td><td>74</td><td>2,024</td><td>10,522</td><td>9,267</td></tr><tr><td>2</td><td>71</td><td>1,993</td><td>10,270</td><td>9,443</td></tr><tr><td>3</td><td>71</td><td>1,992</td><td>10,169</td><td>9,531</td></tr><tr><td>4</td><td>71</td><td>1,991</td><td>10,160</td><td>9,571</td></tr><tr><td>5</td><td>71</td><td>1,988</td><td>10,097</td><td>9,636</td></tr><tr><td>6</td><td>71</td><td>1,987</td><td>10,092</td><td>9,635</td></tr><tr><td>7</td><td>71</td><td>1,988</td><td>10,094</td><td>9,649</td></tr><tr><td>8</td><td>71</td><td>1,991</td><td>10,040</td><td>9,703</td></tr><tr><td>9</td><td>71</td><td>1,990</td><td>10,023</td><td>9,700</td></tr><tr><td>10</td><td>71</td><td>1,991</td><td>10,042</td><td>9,732</td></tr><tr><td>11</td><td>71</td><td>1,986</td><td>9,989</td><td>9,738</td></tr><tr><td>12</td><td>71</td><td>1,994</td><td>9,982</td><td>9,791</td></tr><tr><td>13</td><td>71</td><td>1,989</td><td>9,980</td><td>9,815</td></tr><tr><td>14</td><td>71</td><td>1,993</td><td>9,943</td><td>9,783</td></tr><tr><td>15</td><td>71</td><td>1,992</td><td>9,953</td><td>9,835</td></tr><tr><td>16</td><td>71</td><td>1,987</td><td>9,961</td><td>9,845</td></tr><tr><td>17</td><td>71</td><td>1,988</td><td>9,887</td><td>9,842</td></tr><tr><td>18</td><td>71</td><td>1,986</td><td>9,889</td><td>9,853</td></tr><tr><td>19</td><td>71</td><td>1,990</td><td>9,897</td><td>9,861</td></tr><tr><td>20</td><td>71</td><td>1,986</td><td>9,900</td><td>9,836</td></tr><tr><td>21</td><td>71</td><td>1,989</td><td>9,856</td><td>9,931</td></tr><tr><td>22</td><td>71</td><td>1,988</td><td>9,861</td><td>9,890</td></tr><tr><td>23</td><td>71</td><td>1,988</td><td>9,855</td><td>9,912</td></tr><tr><td>24</td><td>71</td><td>1,989</td><td>9,855</td><td>9,878</td></tr><tr><td>25</td><td>71</td><td>1,991</td><td>9,828</td><td>9,908</td></tr><tr><td>26</td><td>71</td><td>1,988</td><td>9,836</td><td>9,896</td></tr><tr><td>27</td><td>71</td><td>1,991</td><td>9,801</td><td>9,958</td></tr><tr><td>28</td><td>71</td><td>1,987</td><td>9,830</td><td>9,918</td></tr><tr><td>29</td><td>70</td><td>1,988</td><td>9,813</td><td>9,969</td></tr><tr><td>30</td><td>70</td><td>1,988</td><td>9,787</td><td>9,931</td></tr><tr><td>31</td><td>70</td><td>1,991</td><td>9,777</td><td>9,984</td></tr><tr><td>32</td><td>70</td><td>1,988</td><td>9,747</td><td>9,982</td></tr><tr><td>33</td><td>71</td><td>1,989</td><td>9,763</td><td>9,971</td></tr><tr><td>34</td><td>70</td><td>1,988</td><td>9,737</td><td>9,972</td></tr><tr><td>35</td><td>70</td><td>1,991</td><td>9,744</td><td>9,963</td></tr><tr><td>36</td><td>70</td><td>1,990</td><td>9,761</td><td>9,987</td></tr><tr><td>37</td><td>70</td><td>1,989</td><td>9,737</td><td>9,970</td></tr><tr><td>38</td><td>70</td><td>1,990</td><td>9,723</td><td>9,978</td></tr><tr><td>39</td><td>70</td><td>1,995</td><td>9,757</td><td>9,985</td></tr><tr><td>40</td><td>70</td><td>1,991</td><td>9,689</td><td>9,954</td></tr><tr><td>41</td><td>70</td><td>1,987</td><td>9,710</td><td>9,984</td></tr><tr><td>42</td><td>70</td><td>1,988</td><td>9,688</td><td>9,988</td></tr><tr><td>43</td><td>70</td><td>1,990</td><td>9,724</td><td>9,966</td></tr><tr><td>44</td><td>70</td><td>1,992</td><td>9,676</td><td>9,986</td></tr><tr><td>45</td><td>70</td><td>1,990</td><td>9,670</td><td>9,960</td></tr><tr><td>46</td><td>70</td><td>1,987</td><td>9,679</td><td>9,982</td></tr><tr><td>47</td><td>70</td><td>1,985</td><td>9,657</td><td>9,936</td></tr><tr><td>48</td><td>70</td><td>1,990</td><td>9,642</td><td>9,993</td></tr><tr><td>49</td><td>69</td><td>1,992</td><td>9,689</td><td>9,941</td></tr><tr><td>50</td><td>70</td><td>1,986</td><td>9,623</td><td>9,988</td></tr></tbody></table></div></details>
+</figure>
+
+<h2>4. 第 50 步时地形中的洼地</h2>
+<figure>
+<figcaption>导出高程中的严格局部极小值格数（与工具无关的统计）</figcaption>
+<div class="sub">初始地形含 <span id="init-min"></span> 个局部极小值（竖线）。K 越大侵蚀越快，洼地消失越快；同一 K 下两工具的地形演化速度不同。</div>
+<div class="legend" id="leg-min"></div>
+<div id="fig-min"></div>
+<details><summary>数据表</summary><div class="scroll"><table><thead><tr><th>配置</th><th>K = 1e-6</th><th>K = 1e-5</th><th>K = 1e-4</th></tr></thead><tbody><tr><td>初始地形（第 0 步）</td><td>27,569</td><td>27,569</td><td>27,569</td></tr><tr><td>fastscape · execute_step</td><td>27,039</td><td>24,246</td><td>3,112</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>27,089</td><td>26,440</td><td>20,406</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>27,092</td><td>26,418</td><td>19,894</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>26,874</td><td>24,176</td><td>10,831</td></tr></tbody></table></div></details>
+</figure>
+
+<h2>5. 峰值内存</h2>
+<figure>
+<figcaption>单次运行的峰值工作集（MB，K = 1e-5，高程组）</figcaption>
+<div id="fig-mem"></div>
+</figure>
+
+<h2>6. 运行时间分摊、规模换算与环境</h2>
+<figure>
+<figcaption>99 次运行的墙钟时间按配置分摊</figcaption>
+<div class="scroll"><table><thead><tr><th>配置</th><th>运行次数</th><th>墙钟时间 min</th><th>占比</th></tr></thead><tbody><tr><td>DFR</td><td>24</td><td>150.2</td><td>45.5%</td></tr><tr><td>LMB</td><td>24</td><td>146.9</td><td>44.5%</td></tr><tr><td>PFFR</td><td>24</td><td>31.7</td><td>9.6%</td></tr><tr><td>FS</td><td>24</td><td>1.1</td><td>0.3%</td></tr><tr><td>FS_PIECEWISE</td><td>3</td><td>0.2</td><td>0.1%</td></tr><tr><td>合计</td><td>99</td><td>330.1</td><td>100%</td></tr></tbody></table></div>
+</figure>
+<figure>
+<figcaption>从 60×60 到 500×500 的每格耗时（K = 1e-5，高程组）</figcaption>
+<div class="scroll"><table><thead><tr><th>配置</th><th>60×60（3,600 格）ms/步</th><th>500×500（250,000 格）ms/步</th><th>每格 µs，60×60</th><th>每格 µs，500×500</th></tr></thead><tbody><tr><td>fastscape · execute_step</td><td>0.9</td><td>70</td><td>0.24</td><td>0.28</td></tr><tr><td>Landlab · PriorityFloodFlowRouter</td><td>28.4</td><td>1,988</td><td>7.89</td><td>7.95</td></tr><tr><td>Landlab · DepressionFinderAndRouter</td><td>40.0</td><td>9,831</td><td>11.10</td><td>39.32</td></tr><tr><td>Landlab · LakeMapperBarnes</td><td>130.0</td><td>9,895</td><td>36.11</td><td>39.58</td></tr></tbody></table></div>
+<p class="note">每格耗时在两种规模下接近的配置按线性规模变化；DepressionFinderAndRouter 的每格耗时随规模上升。</p>
+</figure>
+<figure>
+<figcaption>环境与统一设置</figcaption>
+<div class="scroll wrap"><table><tbody><tr><td>硬件</td><td>AMD Ryzen 9 9950X3D，16 核 32 线程；内存 95.6 GB；台式机，电源方案“高性能”</td></tr><tr><td>系统</td><td>Windows 11 专业版 build 26200；3.12.14 (conda-forge)</td></tr><tr><td>软件包</td><td>numpy 2.5.2，scipy 1.18.0，numba 0.67.0，xarray 2026.7.0，zarr 3.3.0，xsimlab 0.5.0，landlab 2.10.1，fastscape 0.1.0，fastscapelib_fortran 2.8.4，richdem 2.4.3</td></tr><tr><td>运行条件</td><td>每次运行为独立进程；CPU 亲和固定逻辑 CPU 4；OMP/NUMBA/BLAS 线程数 1；运行前 3 s CPU 负载采样，阈值 15%，实测最高 10.9%；可用内存最低 70.4 GB</td></tr><tr><td>统一物理设置</td><td>500×500，dx = 1000 m，dt = 1000 年，50 步；m = 0.4，n = 1；D = 0.01 m²/yr；U = 0.001 m/yr；K = 1e-6、1e-5、1e-4；初始地形为种子 1234 的 0 至 1 m 均匀噪声；四边固定高程；D8 单流向；抬升不作用于边界</td></tr><tr><td>轮次</td><td>预热 1 轮（5 步）加计时 3 轮（50 步），四种配置在轮内交替；统计排除每次运行前 5 步；表中数值为三轮中位数</td></tr></tbody></table></div>
+<ul class="facts">
+<li>fastscape 0.1.0 经 xarray-simlab 0.5.0 的路径在本环境无法运行（zarr 3 移除 <code>MemoryStore</code> 旧位置与 <code>Group.create_dataset</code>，numpy 2.5 移除 <code>in1d</code>）；fastscape 线因此直接调用 fastscapelib-fortran 的 FastScape API，<code>execute_step</code> 与逐例程调用的结果逐位一致。</li>
+<li>LakeMapperBarnes 不写入 <code>flood_status_code</code>，该配置的“第 50 步淹没格数”未记录；其局部极小值计数来自导出高程。</li>
+<li>两工具在相同设置下的流向与洼地改道结果不同：K = 1e-5 时最大汇水面积 fastscape 为 1.01×10¹¹ m²，Landlab 三种配置为 5.05×10¹⁰ 至 5.06×10¹⁰ m²。</li>
+</ul>
+</figure>
+
+<footer>数据来源：bench/results/L1/runs/*.json、manifest.jsonl、exports/*.npy、results/_smoke、results/env_check.json。生成脚本 bench/make_report.py。</footer>
+</main>
+<script>
+const D = {"configs": [{"id": "FS", "name": "fastscape · execute_step", "desc": "fastscapelib-fortran 2.8.4，FastScape API 直接调用"}, {"id": "PFFR", "name": "Landlab · PriorityFloodFlowRouter", "desc": "richdem 优先洪泛填洼 + D8"}, {"id": "DFR", "name": "Landlab · DepressionFinderAndRouter", "desc": "FlowAccumulator(D8) + 洼地识别改道"}, {"id": "LMB", "name": "Landlab · LakeMapperBarnes", "desc": "FlowAccumulator(D8) + 纯 Python 优先洪泛填洼"}], "ks": ["1e-06", "1e-05", "1e-04"], "kLabel": {"1e-06": "K = 1e-6", "1e-05": "K = 1e-5", "1e-04": "K = 1e-4"}, "cells": {"K1e-04_elev_da_DFR": {"rounds": 3, "steps": 50, "ms": 8574.915108888914, "ms_min": 8571.079506666623, "ms_max": 8583.536122221833, "first_ms": 10530.299899997772, "setup_s": 0.43339449999984936, "import_s": 0.990065300000424, "mem_mb": 507.3984375, "export_ms": 6.12120000005234, "flooded": 54609, "z_min": 0.0008856438232965891, "z_max": 50.63428241577365, "A_max": 31913000000.0, "comps": {"uplift": 0.4665111110726785, "route": 8542.961922222617, "route_fill": 0.0, "spl": 25.161040000239154, "diff": 6.2174266666665465, "total": 8574.915108888914}}, "K1e-04_elev_da_FS": {"rounds": 3, "steps": 50, "ms": 59.05547777777732, "ms_min": 58.793199999814135, "ms_max": 59.35035333338116, "first_ms": 73.37159999951837, "setup_s": 0.00617939999938244, "import_s": 0.09440449999965494, "mem_mb": 107.8359375, "export_ms": 4.6245999983511865, "flooded": 8794, "z_min": 0.0008856438232965891, "z_max": 50.658698931951164, "A_max": 99838000000.0, "comps": {"total": 59.05547777777732}}, "K1e-04_elev_da_LMB": {"rounds": 3, "steps": 50, "ms": 8677.06683111133, "ms_min": 8670.889824444344, "ms_max": 8765.443451110332, "first_ms": 9300.22739999913, "setup_s": 0.4606535000020813, "import_s": 0.9933333999942988, "mem_mb": 566.9296875, "export_ms": 6.410800004232442, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.62293362642354, "A_max": 50372000000.0, "comps": {"uplift": 0.46318666686096954, "route": 8644.14517555528, "route_fill": 8579.739573333387, "spl": 26.358111111443982, "diff": 6.242166666682655, "total": 8677.06683111133}}, "K1e-04_elev_da_PFFR": {"rounds": 3, "steps": 50, "ms": 2001.0581111118272, "ms_min": 1985.7965288893158, "ms_max": 2002.3094066665283, "first_ms": 2030.093900000793, "setup_s": 0.3939843000007386, "import_s": 0.9885812000029546, "mem_mb": 445.34375, "export_ms": 4.692700000305194, "flooded": 55812, "z_min": 0.0008856438232965891, "z_max": 50.6488169663225, "A_max": 28539000000.0, "comps": {"uplift": 0.4652977776357956, "route": 1965.5644822218972, "route_fill": 0.0, "spl": 28.24536666675057, "diff": 6.099486666870588, "total": 2001.0581111118272}}, "K1e-04_elev_DFR": {"rounds": 3, "steps": 50, "ms": 8568.976264444225, "ms_min": 8541.720111110933, "ms_max": 8586.321851111197, "first_ms": 10565.543100005016, "setup_s": 0.43488399999478133, "import_s": 0.9337307999994664, "mem_mb": 507.91015625, "export_ms": 2.9357999956118874, "flooded": 54609, "z_min": 0.0008856438232965891, "z_max": 50.63428241577365, "A_max": 31913000000.0, "comps": {"uplift": 0.45863999985158443, "route": 8536.831895556761, "route_fill": 0.0, "spl": 25.45648666580544, "diff": 6.214300000121713, "total": 8568.976264444225}}, "K1e-04_elev_FS": {"rounds": 3, "steps": 50, "ms": 58.828480000213155, "ms_min": 58.68011555560063, "ms_max": 58.86247555519933, "first_ms": 73.16299999729381, "setup_s": 0.006106799999543, "import_s": 0.08865420000074664, "mem_mb": 107.875, "export_ms": 2.969700002722675, "flooded": 8794, "z_min": 0.0008856438232965891, "z_max": 50.658698931951164, "A_max": 99838000000.0, "comps": {"total": 58.828480000213155}}, "K1e-04_elev_LMB": {"rounds": 3, "steps": 50, "ms": 8686.309631111282, "ms_min": 8683.41113111116, "ms_max": 8768.661615555498, "first_ms": 9308.483200002229, "setup_s": 0.45852920000470476, "import_s": 0.9950230000031297, "mem_mb": 567.96484375, "export_ms": 3.3032000028470065, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.62293362642354, "A_max": 50372000000.0, "comps": {"uplift": 0.4713066670067039, "route": 8653.039948888343, "route_fill": 8588.252055554929, "spl": 26.428297778006204, "diff": 6.247695555632365, "total": 8686.309631111282}}, "K1e-04_elev_PFFR": {"rounds": 3, "steps": 50, "ms": 1990.1620066664893, "ms_min": 1988.5591688888478, "ms_max": 2022.3886777781042, "first_ms": 2023.008199998003, "setup_s": 0.39304880000054254, "import_s": 0.9991365999994741, "mem_mb": 444.64453125, "export_ms": 3.405400006158743, "flooded": 55812, "z_min": 0.0008856438232965891, "z_max": 50.6488169663225, "A_max": 28539000000.0, "comps": {"uplift": 0.455504444431022, "route": 1955.411899999793, "route_fill": 0.0, "spl": 28.145926666345783, "diff": 6.023586666399043, "total": 1990.1620066664893}}, "K1e-05_elev_da_DFR": {"rounds": 3, "steps": 50, "ms": 9945.19025111141, "ms_min": 9940.9997577779, "ms_max": 9956.016057777824, "first_ms": 10551.200199999585, "setup_s": 0.4355832000001101, "import_s": 0.9405464000010397, "mem_mb": 508.1015625, "export_ms": 6.0691000035149045, "flooded": 80129, "z_min": 0.0008856438232965891, "z_max": 50.95456386317327, "A_max": 50616000000.0, "comps": {"uplift": 0.4649688888295916, "route": 9913.291000000349, "route_fill": 0.0, "spl": 24.72111111104217, "diff": 6.214897778166536, "total": 9945.19025111141}}, "K1e-05_elev_da_FS": {"rounds": 3, "steps": 50, "ms": 70.4464777774572, "ms_min": 70.31364666674764, "ms_max": 70.49589777662834, "first_ms": 73.75339999998687, "setup_s": 0.006146899999293964, "import_s": 0.09489960000064457, "mem_mb": 108.09765625, "export_ms": 6.0002000027452596, "flooded": 77647, "z_min": 0.0008856438232965891, "z_max": 50.95498572377691, "A_max": 101092000000.0, "comps": {"total": 70.4464777774572}}, "K1e-05_elev_da_LMB": {"rounds": 3, "steps": 50, "ms": 9932.62975777826, "ms_min": 9878.048524444603, "ms_max": 9999.824720000308, "first_ms": 9266.248700001597, "setup_s": 0.4620076999999583, "import_s": 0.9549145000019053, "mem_mb": 566.25, "export_ms": 6.2060999989626, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.95535675792127, "A_max": 50628000000.0, "comps": {"uplift": 0.4698577780800406, "route": 9900.633371111082, "route_fill": 9824.661655555732, "spl": 25.287735555320978, "diff": 6.238553333969321, "total": 9932.62975777826}}, "K1e-05_elev_da_PFFR": {"rounds": 3, "steps": 50, "ms": 1999.3782622223887, "ms_min": 1991.6382333334896, "ms_max": 2019.8921822222476, "first_ms": 2034.8664000048302, "setup_s": 0.3922911000008753, "import_s": 0.9941825999994762, "mem_mb": 445.15625, "export_ms": 6.357000005664304, "flooded": 81074, "z_min": 0.0008856438232965891, "z_max": 50.95641488517698, "A_max": 50460000000.0, "comps": {"uplift": 0.46085777721600607, "route": 1965.4616822225055, "route_fill": 0.0, "spl": 27.389302222016138, "diff": 6.105924444677335, "total": 1999.3782622223887}}, "K1e-05_elev_DFR": {"rounds": 3, "steps": 50, "ms": 9831.000964444278, "ms_min": 9821.45628666662, "ms_max": 9851.006328889021, "first_ms": 10521.504299998924, "setup_s": 0.43475760000001173, "import_s": 0.9955713000017568, "mem_mb": 508.40625, "export_ms": 2.6182000001426786, "flooded": 80129, "z_min": 0.0008856438232965891, "z_max": 50.95456386317327, "A_max": 50616000000.0, "comps": {"uplift": 0.4629688892034917, "route": 9799.655066666634, "route_fill": 0.0, "spl": 24.68825777792113, "diff": 6.187937777415048, "total": 9831.000964444278}}, "K1e-05_elev_FS": {"rounds": 3, "steps": 50, "ms": 70.48161777767947, "ms_min": 70.42484888871614, "ms_max": 70.5457044445211, "first_ms": 73.93919999958598, "setup_s": 0.00613589999920805, "import_s": 0.09331910000037169, "mem_mb": 107.76171875, "export_ms": 3.3770999980333727, "flooded": 77647, "z_min": 0.0008856438232965891, "z_max": 50.95498572377691, "A_max": 101092000000.0, "comps": {"total": 70.48161777767947}}, "K1e-05_elev_FS_PIECEWISE": {"rounds": 3, "steps": 50, "ms": 70.30496888878082, "ms_min": 70.26565111154923, "ms_max": 70.4157399998318, "first_ms": 73.22340000246186, "setup_s": 0.006145999999716878, "import_s": 0.09481810000215773, "mem_mb": 107.83984375, "export_ms": 2.4902000004658476, "flooded": 77647, "z_min": 0.0008856438232965891, "z_max": 50.95498572377691, "A_max": 101092000000.0, "comps": {"uplift": 0.5179088894187266, "route": 41.996522222567975, "accum": 0.79031777802609, "spl": 14.841337778489105, "diff": 12.136251110738764, "total": 70.30496888878082}}, "K1e-05_elev_LMB": {"rounds": 3, "steps": 50, "ms": 9895.188857778056, "ms_min": 9882.277793333196, "ms_max": 9919.10800888937, "first_ms": 9266.83320000302, "setup_s": 0.4583896000003733, "import_s": 0.9994893000039156, "mem_mb": 565.62109375, "export_ms": 3.05619999562623, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.95535675792127, "A_max": 50628000000.0, "comps": {"uplift": 0.4634644449753169, "route": 9863.029833333227, "route_fill": 9786.807628889073, "spl": 25.4801111111495, "diff": 6.260135555769214, "total": 9895.188857778056}}, "K1e-05_elev_PFFR": {"rounds": 3, "steps": 50, "ms": 1988.3660177777024, "ms_min": 1987.1576955553287, "ms_max": 1993.5205177778294, "first_ms": 2023.914400000649, "setup_s": 0.3981832999998005, "import_s": 1.000055299999076, "mem_mb": 444.37890625, "export_ms": 3.053400003409479, "flooded": 81074, "z_min": 0.0008856438232965891, "z_max": 50.95641488517698, "A_max": 50460000000.0, "comps": {"uplift": 0.4573133331885199, "route": 1954.8743399999996, "route_fill": 0.0, "spl": 27.093239999440915, "diff": 6.051931110980352, "total": 1988.3660177777024}}, "K1e-06_elev_da_DFR": {"rounds": 3, "steps": 50, "ms": 10218.211535555665, "ms_min": 10160.976326666989, "ms_max": 10259.204295555537, "first_ms": 10558.782899999642, "setup_s": 0.43406369999866, "import_s": 0.9960262999993574, "mem_mb": 508.765625, "export_ms": 4.7916999901644886, "flooded": 91730, "z_min": 0.0008856438232965891, "z_max": 50.993781450567134, "A_max": 50742000000.0, "comps": {"uplift": 0.4642577773969, "route": 10186.923006667186, "route_fill": 0.0, "spl": 24.635622222073533, "diff": 6.188648889009427, "total": 10218.211535555665}}, "K1e-06_elev_da_FS": {"rounds": 3, "steps": 50, "ms": 71.06454222262579, "ms_min": 70.98164000013234, "ms_max": 71.16462000057153, "first_ms": 73.46680000046035, "setup_s": 0.00610939999751281, "import_s": 0.09392180000577355, "mem_mb": 108.046875, "export_ms": 5.433899998024572, "flooded": 91639, "z_min": 0.0008856438232965891, "z_max": 50.99378213061023, "A_max": 101556000000.0, "comps": {"total": 71.06454222262579}}, "K1e-06_elev_da_LMB": {"rounds": 3, "steps": 50, "ms": 9555.418591111567, "ms_min": 9518.508053332982, "ms_max": 9689.88704888923, "first_ms": 9275.669900001958, "setup_s": 0.45937640000192914, "import_s": 0.9797385999991093, "mem_mb": 561.44921875, "export_ms": 4.872000004979782, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.99430716528189, "A_max": 50668000000.0, "comps": {"uplift": 0.4691977775008935, "route": 9523.801615555649, "route_fill": 9445.64164888822, "spl": 24.94472666666196, "diff": 6.219679999695574, "total": 9555.418591111567}}, "K1e-06_elev_da_PFFR": {"rounds": 3, "steps": 50, "ms": 1995.2416777774085, "ms_min": 1981.6028022218636, "ms_max": 1999.6596822219242, "first_ms": 2029.2160999997577, "setup_s": 0.3926657999982126, "import_s": 1.0095260999951279, "mem_mb": 444.75390625, "export_ms": 4.804399999557063, "flooded": 91818, "z_min": 0.0008856438232965891, "z_max": 50.99382398623558, "A_max": 50662000000.0, "comps": {"uplift": 0.4548222216221297, "route": 1961.9986355559377, "route_fill": 0.0, "spl": 26.89632222205142, "diff": 6.08418888894246, "total": 1995.2416777774085}}, "K1e-06_elev_DFR": {"rounds": 3, "steps": 50, "ms": 10153.527328888595, "ms_min": 9835.91006444476, "ms_max": 10297.774937777365, "first_ms": 10557.377400000405, "setup_s": 0.4375083999984781, "import_s": 0.9985651000024518, "mem_mb": 507.6484375, "export_ms": 2.6887000058195554, "flooded": 91730, "z_min": 0.0008856438232965891, "z_max": 50.993781450567134, "A_max": 50742000000.0, "comps": {"uplift": 0.4649044436519034, "route": 10122.447242222552, "route_fill": 0.0, "spl": 24.529224444348884, "diff": 6.222126666559942, "total": 10153.527328888595}}, "K1e-06_elev_FS": {"rounds": 3, "steps": 50, "ms": 70.8305644443802, "ms_min": 70.81815555591473, "ms_max": 71.33863333405719, "first_ms": 73.17189999957918, "setup_s": 0.006194199999299599, "import_s": 0.09444099999745958, "mem_mb": 107.78125, "export_ms": 2.590199997939635, "flooded": 91639, "z_min": 0.0008856438232965891, "z_max": 50.99378213061023, "A_max": 101556000000.0, "comps": {"total": 70.8305644443802}}, "K1e-06_elev_LMB": {"rounds": 3, "steps": 50, "ms": 9562.70274222253, "ms_min": 9556.218708889111, "ms_max": 9622.212882221922, "first_ms": 9313.853499999823, "setup_s": 0.4620541999975103, "import_s": 0.964853999998013, "mem_mb": 561.96484375, "export_ms": 2.6103999989572912, "flooded": 0, "z_min": 0.0008856438232965891, "z_max": 50.99430716528189, "A_max": 50668000000.0, "comps": {"uplift": 0.471520000428427, "route": 9531.18210888901, "route_fill": 9453.073688889142, "spl": 24.97321777740985, "diff": 6.239653333129051, "total": 9562.70274222253}}, "K1e-06_elev_PFFR": {"rounds": 3, "steps": 50, "ms": 1997.806819999985, "ms_min": 1985.6048911114663, "ms_max": 2000.0723688889086, "first_ms": 2028.5150999989128, "setup_s": 0.3935450999997556, "import_s": 1.0082976999983657, "mem_mb": 443.83984375, "export_ms": 2.83540000236826, "flooded": 91818, "z_min": 0.0008856438232965891, "z_max": 50.99382398623558, "A_max": 50662000000.0, "comps": {"uplift": 0.4558777776158725, "route": 1964.1472555557914, "route_fill": 0.0, "spl": 27.121148889030643, "diff": 6.082537777547259, "total": 1997.806819999985}}}, "series": {"FS": [73.93919999958598, 70.95419999677688, 70.8002999999735, 70.7113999997091, 71.17599999764934, 71.0369999978866, 70.91489999947953, 71.30269999834127, 71.16289999976289, 71.00770000033663, 70.87529999989783, 71.00419999915175, 71.02319999830797, 70.95639999897685, 70.73959999979706, 70.57830000121612, 71.18590000027325, 70.62869999936083, 70.75409999742988, 70.91999999829568, 70.93239999812795, 70.6190000018978, 70.73300000047311, 70.78619999811053, 70.51470000078552, 70.65009999860195, 70.5316000021412, 70.86549999803538, 70.30980000126874, 70.23789999948349, 70.29259999762871, 70.3773999994155, 70.52999999723397, 70.27179999931832, 70.3644000022905, 70.3179000011005, 70.37860000127694, 70.10219999938272, 70.09889999608276, 70.11409999904572, 70.06639999963227, 69.93160000274656, 69.98790000216104, 69.70550000187359, 69.58909999957541, 69.71699999849079, 69.78349999917555, 69.59099999949103, 69.4906999997329, 69.85799999893061], "PFFR": [2023.914400000649, 1992.9853000030562, 1991.5250999983982, 1991.3826000010886, 1987.9667000022891, 1987.3922999977367, 1988.3945999972639, 1990.524999997433, 1990.2376000027289, 1991.317899999558, 1986.4516999950865, 1994.324699997378, 1988.6509999996633, 1993.2150000022375, 1991.5334000033909, 1987.0454000010795, 1987.7836000014213, 1986.4372000010917, 1989.970099999482, 1986.2195999958203, 1989.2658999997366, 1988.0334000008588, 1988.3782000033534, 1988.7279000031413, 1990.7611000016914, 1987.5725999991118, 1990.6773999973666, 1987.0372999976098, 1987.6299999959883, 1988.1199999981618, 1990.82140000246, 1987.7090999943903, 1988.5295999993104, 1987.8448999988905, 1990.5821000029391, 1989.9450000011711, 1989.2599000013433, 1990.4280999980983, 1994.6092999962275, 1990.9516000043368, 1986.8380000007164, 1988.2808000002115, 1990.1338999989093, 1991.68439999994, 1990.318300006038, 1987.104799998633, 1984.5887999981642, 1990.3720000002068, 1991.645599999174, 1985.7179999999062], "DFR": [10521.504299998924, 10270.300199998019, 10168.89380000066, 10159.74389999974, 10096.812299998419, 10092.258399999992, 10093.99719999783, 10039.988200001972, 10023.211300002004, 10041.815799999313, 9988.923000000796, 9981.9920000009, 9980.115900001692, 9942.60999999824, 9952.591900000698, 9961.236499999359, 9887.416699999449, 9889.134999997623, 9897.483699998702, 9900.093899996136, 9856.033700001717, 9861.057300000539, 9855.045299998892, 9854.752700000972, 9827.723700000206, 9836.108300001797, 9800.858800001151, 9829.962799998611, 9812.605999999505, 9786.78299999956, 9776.73219999997, 9747.01819999973, 9762.694299999566, 9736.938600002759, 9743.608700002369, 9761.45059999908, 9737.12599999999, 9722.980400001688, 9756.999900000665, 9689.163099996222, 9709.750599999097, 9687.557299999753, 9724.435299998731, 9676.445600001898, 9669.507200000226, 9678.823800000828, 9656.670899999881, 9641.59010000003, 9689.15329999436, 9622.862500000338], "LMB": [9266.83320000302, 9443.173999999999, 9531.249700004992, 9571.453200001997, 9636.400199997297, 9635.312599999452, 9649.081900002784, 9702.624899997318, 9699.935699998605, 9732.176099998469, 9738.027200000943, 9790.670300000784, 9815.088200004539, 9782.691699998395, 9835.30040000187, 9844.557700002042, 9841.517099997873, 9853.08620000069, 9860.82560000068, 9835.860400002275, 9930.988699998125, 9890.283100001398, 9912.088699999003, 9878.200099999958, 9908.215200000996, 9895.77840000129, 9957.835900000646, 9917.984799998521, 9968.864499998745, 9931.11730000237, 9984.41499999899, 9982.019099999889, 9970.716899999388, 9972.042000001238, 9962.653200000204, 9986.552700000175, 9970.486400001391, 9978.255800000625, 9985.24080000061, 9954.23650000157, 9984.47159999705, 9988.279000004695, 9966.422099998454, 9986.175600002753, 9959.756199998083, 9982.054800002516, 9936.350100000709, 9993.46660000083, 9941.049100001692, 9988.198900005955]}, "fsSplit": {"uplift": 0.5179088894187266, "route": 41.996522222567975, "accum": 0.79031777802609, "spl": 14.841337778489105, "diff": 12.136251110738764, "total": 70.30496888878082}, "minima": {"initial": 27569, "1e-06_FS": 27039, "1e-06_PFFR": 27089, "1e-06_DFR": 27092, "1e-06_LMB": 26874, "1e-05_FS": 24246, "1e-05_PFFR": 26440, "1e-05_DFR": 26418, "1e-05_LMB": 24176, "1e-04_FS": 3112, "1e-04_PFFR": 20406, "1e-04_DFR": 19894, "1e-04_LMB": 10831}, "comps": [["route", "汇流与洼地处理"], ["spl", "河道侵蚀"], ["diff", "坡面扩散"], ["accum", "累积"], ["uplift", "抬升"]]};
+const NS = "http://www.w3.org/2000/svg";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, attrs, s){ const t = el('text', attrs, parent); t.textContent = s; return t; }
+function fmt(v, d){ d = d === undefined ? 0 : d; return Number(v).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d}); }
+function niceStep(range, n){ const raw = range / n, p = Math.pow(10, Math.floor(Math.log10(raw))), r = raw / p; return (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * p; }
+function hbar(x, y, w, h, r){ r = Math.min(r, w / 2, h / 2); return `M${x},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w},${y + r} V${y + h - r} A${r},${r} 0 0 1 ${x + w - r},${y + h} H${x} Z`; }
+const tip = document.getElementById('tip');
+function showTip(x, y, rows){ tip.replaceChildren(); rows.forEach(([v, l]) => { const r = document.createElement('div'); r.className = 'tip-row'; const s = document.createElement('strong'); s.textContent = v; const sp = document.createElement('span'); sp.textContent = l; r.append(s, sp); tip.appendChild(r); }); tip.hidden = false; tip.style.left = Math.min(x + 14, document.documentElement.clientWidth - tip.offsetWidth - 12) + 'px'; tip.style.top = (y + 14) + 'px'; }
+function hideTip(){ tip.hidden = true; }
+function hover(hit, rows){ hit.addEventListener('pointermove', e => showTip(e.pageX, e.pageY, rows)); hit.addEventListener('pointerleave', hideTip); hit.addEventListener('focus', () => { const b = hit.getBoundingClientRect(); showTip(b.right + window.scrollX, b.top + window.scrollY, rows); }); hit.addEventListener('blur', hideTip); }
+const SERIES = ['--s1', '--s2', '--s3', '--s4', '--s5'];
+const ORD = ['--o1', '--o2', '--o3'];
+const cfgColor = {}; D.configs.forEach((c, i) => cfgColor[c.id] = SERIES[i]);
+
+// 1. small multiples: bars per configuration, K tiers as ordinal ramp
+(function(){
+  const host = document.getElementById('fig-k');
+  D.configs.forEach(cfg => {
+    const wrap = document.createElement('div');
+    const t = document.createElement('div'); t.className = 'panel-title'; t.textContent = cfg.name; wrap.appendChild(t);
+    const W = 360, labelW = 62, valW = 70, barH = 18, gap = 12, padT = 6, axisH = 24;
+    const rows = D.ks.map((K, i) => ({K, c: D.cells[`K${K}_elev_${cfg.id}`], da: D.cells[`K${K}_elev_da_${cfg.id}`], color: ORD[i]}));
+    const H = padT + rows.length * (barH + gap) + axisH;
+    const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': cfg.name + ' 每步耗时'}, wrap);
+    const x0 = labelW, plotW = W - labelW - valW;
+    const max = Math.max(...rows.map(r => r.c.ms_max)); const step = niceStep(max, 3); const top = Math.ceil(max / step) * step;
+    const sx = v => x0 + v / top * plotW;
+    for (let v = 0; v <= top + 1e-9; v += step){ el('line', {x1: sx(v), x2: sx(v), y1: padT, y2: H - axisH, class: 'grid'}, svg); txt(svg, {x: sx(v), y: H - 7, class: 'tick', 'text-anchor': 'middle'}, fmt(v)); }
+    el('line', {x1: x0, x2: x0, y1: padT, y2: H - axisH, class: 'axis'}, svg);
+    rows.forEach((r, i) => {
+      const y = padT + i * (barH + gap);
+      txt(svg, {x: x0 - 8, y: y + barH / 2 + 4, class: 'label', 'text-anchor': 'end'}, D.kLabel[r.K].replace('K = ', ''));
+      const hit = el('rect', {x: x0, y: y - gap / 2, width: W - x0, height: barH + gap, class: 'hit', tabindex: 0}, svg);
+      el('path', {d: hbar(x0, y, Math.max(sx(r.c.ms) - x0, 1), barH, 4), fill: `var(${r.color})`, class: 'mark'}, svg);
+      txt(svg, {x: sx(r.c.ms) + 6, y: y + barH / 2 + 4, class: 'value'}, fmt(r.c.ms) + ' ms');
+      hover(hit, [[fmt(r.c.ms) + ' ms', '每步中位数，' + D.kLabel[r.K]], [fmt(r.c.ms_min) + ' 至 ' + fmt(r.c.ms_max) + ' ms', '三轮范围'], [fmt(r.da.ms) + ' ms', '高程+汇水面积组'], [fmt(r.c.first_ms) + ' ms', '首步']]);
+    });
+    txt(svg, {x: W - 2, y: H - 7, class: 'tick', 'text-anchor': 'end'}, 'ms');
+    host.appendChild(wrap);
+  });
+})();
+
+// 2. 100% stacked horizontal bars: components
+(function(){
+  const host = document.getElementById('fig-comp'); const leg = document.getElementById('leg-comp');
+  D.comps.forEach(([k, name], i) => { const s = document.createElement('span'); const sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = `var(${SERIES[i]})`; s.append(sw, document.createTextNode(name)); leg.appendChild(s); });
+  const W = 900, labelW = 250, barH = 20, gap = 14, padT = 6, axisH = 24, right = 16;
+  const H = padT + D.configs.length * (barH + gap) + axisH;
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': '每步耗时构成'}, host);
+  const x0 = labelW, plotW = W - labelW - right;
+  for (let p = 0; p <= 100; p += 25){ const x = x0 + p / 100 * plotW; el('line', {x1: x, x2: x, y1: padT, y2: H - axisH, class: 'grid'}, svg); txt(svg, {x, y: H - 7, class: 'tick', 'text-anchor': 'middle'}, p + '%'); }
+  D.configs.forEach((cfg, i) => {
+    const y = padT + i * (barH + gap);
+    const comps = cfg.id === 'FS' ? D.fsSplit : D.cells[`K1e-05_elev_${cfg.id}`].comps;
+    const parts = D.comps.map(([k, name], j) => ({k, name, v: comps[k] || 0, color: SERIES[j]})).filter(p => p.v > 0);
+    const total = parts.reduce((a, p) => a + p.v, 0);
+    txt(svg, {x: x0 - 10, y: y + barH / 2 + 4, class: 'label', 'text-anchor': 'end'}, cfg.name);
+    const gaps = 2 * (parts.length - 1); let x = x0;
+    parts.forEach((p, j) => {
+      const w = p.v / total * (plotW - gaps);
+      const isLast = j === parts.length - 1, isFirst = j === 0;
+      let d;
+      if (isLast) d = hbar(x, y, Math.max(w, 1), barH, 4); else d = `M${x},${y} H${x + Math.max(w, 1)} V${y + barH} H${x} Z`;
+      const hit = el('rect', {x: x, y: y - gap / 2, width: Math.max(w, 6), height: barH + gap, class: 'hit', tabindex: 0}, svg);
+      el('path', {d, fill: `var(${p.color})`, class: 'mark'}, svg);
+      const share = 100 * p.v / total;
+      if (w >= 64) txt(svg, {x: x + w / 2, y: y + barH / 2 + 4, class: 'inlabel', 'text-anchor': 'middle', fill: (p.color === '--s4' || p.color === '--s3') ? '#0b0b0b' : '#ffffff'}, `${p.name} ${share.toFixed(share < 10 ? 1 : 0)}%`);
+      hover(hit, [[fmt(p.v, p.v < 10 ? 2 : 1) + ' ms', p.name], [share.toFixed(share < 1 ? 2 : 1) + '%', '占每步耗时'], [fmt(total, 1) + ' ms', '每步合计']]);
+      x += w + 2;
+    });
+  });
+})();
+
+// 3. small multiples: per-step series
+(function(){
+  const host = document.getElementById('fig-series');
+  D.configs.forEach(cfg => {
+    const vals = D.series[cfg.id];
+    const wrap = document.createElement('div');
+    const t = document.createElement('div'); t.className = 'panel-title'; const key = document.createElement('span'); key.className = 'key'; key.style.background = `var(${cfgColor[cfg.id]})`; t.append(key, document.createTextNode(cfg.name)); wrap.appendChild(t);
+    const W = 360, H = 170, ml = 58, mr = 62, mt = 10, mb = 26;
+    const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': cfg.name + ' 每步耗时序列'}, wrap);
+    const n = vals.length, lo = Math.min(...vals), hi = Math.max(...vals);
+    const pad = (hi - lo) * 0.25 || hi * 0.05; const step = niceStep((hi - lo + 2 * pad) || 1, 3);
+    const y0 = Math.floor((lo - pad) / step) * step, y1 = Math.ceil((hi + pad) / step) * step;
+    const sx = i => ml + (i) / (n - 1) * (W - ml - mr), sy = v => mt + (1 - (v - y0) / (y1 - y0)) * (H - mt - mb);
+    for (let v = y0; v <= y1 + 1e-9; v += step){ el('line', {x1: ml, x2: W - mr, y1: sy(v), y2: sy(v), class: 'grid'}, svg); txt(svg, {x: ml - 6, y: sy(v) + 4, class: 'tick', 'text-anchor': 'end'}, fmt(v)); }
+    [1, 10, 20, 30, 40, 50].forEach(s => { if (s <= n) txt(svg, {x: sx(s - 1), y: H - 8, class: 'tick', 'text-anchor': 'middle'}, s); });
+    el('line', {x1: ml, x2: W - mr, y1: H - mb, y2: H - mb, class: 'axis'}, svg);
+    const d = vals.map((v, i) => (i ? 'L' : 'M') + sx(i).toFixed(1) + ',' + sy(v).toFixed(1)).join(' ');
+    el('path', {d, class: 'line', stroke: `var(${cfgColor[cfg.id]})`}, svg);
+    const cross = el('line', {x1: 0, x2: 0, y1: mt, y2: H - mb, class: 'cross', visibility: 'hidden'}, svg);
+    const dotH = el('circle', {r: 4, class: 'dot', fill: `var(${cfgColor[cfg.id]})`, visibility: 'hidden'}, svg);
+    el('circle', {cx: sx(n - 1), cy: sy(vals[n - 1]), r: 4, class: 'dot', fill: `var(${cfgColor[cfg.id]})`}, svg);
+    txt(svg, {x: sx(n - 1) + 8, y: sy(vals[n - 1]) + 4, class: 'value'}, fmt(vals[n - 1]));
+    txt(svg, {x: W - 2, y: H - 8, class: 'tick', 'text-anchor': 'end'}, '步');
+    const hit = el('rect', {x: ml, y: mt, width: W - ml - mr, height: H - mt - mb, class: 'hit'}, svg);
+    hit.addEventListener('pointermove', e => { const b = svg.getBoundingClientRect(); const px = (e.clientX - b.left) / b.width * W; let i = Math.round((px - ml) / (W - ml - mr) * (n - 1)); i = Math.max(0, Math.min(n - 1, i)); cross.setAttribute('x1', sx(i)); cross.setAttribute('x2', sx(i)); cross.setAttribute('visibility', 'visible'); dotH.setAttribute('cx', sx(i)); dotH.setAttribute('cy', sy(vals[i])); dotH.setAttribute('visibility', 'visible'); showTip(e.pageX, e.pageY, [[fmt(vals[i]) + ' ms', '第 ' + (i + 1) + ' 步']]); });
+    hit.addEventListener('pointerleave', () => { cross.setAttribute('visibility', 'hidden'); dotH.setAttribute('visibility', 'hidden'); hideTip(); });
+    host.appendChild(wrap);
+  });
+})();
+
+// 4. grouped bars: local minima by K and configuration, with initial reference
+(function(){
+  const host = document.getElementById('fig-min'); const leg = document.getElementById('leg-min');
+  document.getElementById('init-min').textContent = fmt(D.minima.initial);
+  D.configs.forEach((c, i) => { const s = document.createElement('span'); const sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = `var(${SERIES[i]})`; s.append(sw, document.createTextNode(c.name)); leg.appendChild(s); });
+  const W = 900, labelW = 80, valW = 80, barH = 14, gap = 2, groupGap = 18, padT = 26, axisH = 24;
+  const groupH = D.configs.length * (barH + gap) - gap;
+  const H = padT + D.ks.length * (groupH + groupGap) + axisH;
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': '局部极小值格数'}, host);
+  const x0 = labelW, plotW = W - labelW - valW;
+  const max = D.minima.initial; const step = niceStep(max, 4); const top = Math.ceil(max / step) * step;
+  const sx = v => x0 + v / top * plotW;
+  for (let v = 0; v <= top + 1e-9; v += step){ el('line', {x1: sx(v), x2: sx(v), y1: padT, y2: H - axisH, class: 'grid'}, svg); txt(svg, {x: sx(v), y: H - 7, class: 'tick', 'text-anchor': 'middle'}, fmt(v)); }
+  el('line', {x1: x0, x2: x0, y1: padT, y2: H - axisH, class: 'axis'}, svg);
+  el('line', {x1: sx(max), x2: sx(max), y1: padT - 6, y2: H - axisH, class: 'ref'}, svg);
+  txt(svg, {x: sx(max) - 6, y: 12, class: 'tick', 'text-anchor': 'end'}, '初始地形 ' + fmt(max));
+  D.ks.forEach((K, gi) => {
+    const gy = padT + gi * (groupH + groupGap);
+    txt(svg, {x: x0 - 8, y: gy + groupH / 2 + 4, class: 'label', 'text-anchor': 'end'}, D.kLabel[K]);
+    D.configs.forEach((c, i) => {
+      const y = gy + i * (barH + gap); const v = D.minima[`${K}_${c.id}`];
+      const hit = el('rect', {x: x0, y: y - 1, width: W - x0, height: barH + gap, class: 'hit', tabindex: 0}, svg);
+      el('path', {d: hbar(x0, y, Math.max(sx(v) - x0, 1), barH, 4), fill: `var(${SERIES[i]})`, class: 'mark'}, svg);
+      txt(svg, {x: sx(v) + 6, y: y + barH / 2 + 4, class: 'value'}, fmt(v));
+      const c50 = D.cells[`K${K}_elev_${c.id}`];
+      hover(hit, [[fmt(v), '局部极小值格数，' + c.name + '，' + D.kLabel[K]], [(100 * (1 - v / max)).toFixed(0) + '%', '相对初始地形已消失'], [c.id === 'LMB' ? '未记录' : fmt(c50.flooded), '工具报告的淹没格数']]);
+    });
+  });
+})();
+
+// 5. memory bars (single series)
+(function(){
+  const host = document.getElementById('fig-mem');
+  const W = 900, labelW = 250, valW = 90, barH = 18, gap = 12, padT = 6, axisH = 24;
+  const rows = D.configs.map(c => ({c, v: D.cells[`K1e-05_elev_${c.id}`].mem_mb}));
+  const H = padT + rows.length * (barH + gap) + axisH;
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': '峰值内存'}, host);
+  const x0 = labelW, plotW = W - labelW - valW;
+  const max = Math.max(...rows.map(r => r.v)); const step = niceStep(max, 4); const top = Math.ceil(max / step) * step;
+  const sx = v => x0 + v / top * plotW;
+  for (let v = 0; v <= top + 1e-9; v += step){ el('line', {x1: sx(v), x2: sx(v), y1: padT, y2: H - axisH, class: 'grid'}, svg); txt(svg, {x: sx(v), y: H - 7, class: 'tick', 'text-anchor': 'middle'}, fmt(v)); }
+  el('line', {x1: x0, x2: x0, y1: padT, y2: H - axisH, class: 'axis'}, svg);
+  rows.forEach((r, i) => {
+    const y = padT + i * (barH + gap);
+    txt(svg, {x: x0 - 10, y: y + barH / 2 + 4, class: 'label', 'text-anchor': 'end'}, r.c.name);
+    const hit = el('rect', {x: x0, y: y - gap / 2, width: W - x0, height: barH + gap, class: 'hit', tabindex: 0}, svg);
+    el('path', {d: hbar(x0, y, Math.max(sx(r.v) - x0, 1), barH, 4), fill: 'var(--s1)', class: 'mark'}, svg);
+    txt(svg, {x: sx(r.v) + 6, y: y + barH / 2 + 4, class: 'value'}, fmt(r.v) + ' MB');
+    hover(hit, [[fmt(r.v) + ' MB', '峰值工作集，' + r.c.name]]);
+  });
+  txt(svg, {x: W - 2, y: H - 7, class: 'tick', 'text-anchor': 'end'}, 'MB');
+})();
+</script>
+</body>
+</html>
