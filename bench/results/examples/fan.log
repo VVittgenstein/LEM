@@ -1,0 +1,6 @@
+[fan] step 100 t=0.200 Myr  step 483 ms  elapsed 48 s
+[fan] step 200 t=0.400 Myr  step 465 ms  elapsed 95 s
+[fan] step 300 t=0.600 Myr  step 396 ms  elapsed 135 s
+[fan] step 400 t=0.800 Myr  step 366 ms  elapsed 171 s
+[fan] step 500 t=1.000 Myr  step 364 ms  elapsed 208 s
+written F:\LEM\bench\results\examples\fan steps 500 reason criterion

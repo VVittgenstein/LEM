@@ -1,0 +1,134 @@
+{
+ "written_utc": "2026-09-04T05:34:58.730117+00:00",
+ "settings": {
+  "label": "dippingdyke",
+  "nx": 500,
+  "ny": 500,
+  "dx_m": 1000.0,
+  "dt_yr": 100000.0,
+  "kf": {
+   "min": 1e-05,
+   "max": 2e-05,
+   "mean": 1.960032e-05,
+   "field": true
+  },
+  "kfsed": -1.0,
+  "m": 0.4,
+  "n": 1.0,
+  "kd": 0.1,
+  "kdsed": -1.0,
+  "g1": 0.0,
+  "g2": -1.0,
+  "p": 1.0,
+  "single_flow_direction": false,
+  "bc": 1111,
+  "uplift_m_per_yr": {
+   "min": 0.0,
+   "max": 0.001,
+   "mean": 0.0009920160000000005,
+   "field": true
+  },
+  "seed": 1234,
+  "initial_topography": "random uniform noise",
+  "library": "fastscapelib-fortran 2.8.4 (FastScape API via Python)"
+ },
+ "steps": 80,
+ "time_yr": 8000000.0,
+ "channels": {
+  "elevation": {
+   "file": "elevation.npy",
+   "units": "m",
+   "kind": "elevation"
+  },
+  "drainage_area": {
+   "file": "drainage_area.npy",
+   "units": "m2",
+   "kind": "drainage_area",
+   "display": "log10"
+  }
+ },
+ "grid": {
+  "nx": 500,
+  "ny": 500,
+  "dx_m": 1000.0,
+  "dy_m": 1000.0
+ },
+ "timing": {
+  "setup_s": 0.00644569999712985,
+  "steps_total_s": 9.908542700053658,
+  "step_mean_s": 0.12385678375067073,
+  "step_first_s": 0.15936180000426248,
+  "step_last_s": 0.12083729999721982
+ },
+ "output": {
+  "z_min": 0.0008856438232965891,
+  "z_max": 3235.2430507829063,
+  "z_mean": 1162.1660290572695,
+  "A_max": 37493141974.55648,
+  "finite": true,
+  "lake_cells": 0
+ },
+ "task": "T-007",
+ "example": "dippingdyke",
+ "info": {
+  "source": "examples/DippingDyke.f90",
+  "original_grid": "201x201, 100 km, dt 1e5 yr, 500 steps",
+  "dyke": {
+   "x_dyke_m": 49900.0,
+   "half_width_m": 9980.0,
+   "dip_deg": 30.0,
+   "kf_dyke": 1e-05
+  },
+  "check_every": 10
+ },
+ "loop": {
+  "stop_reason": "criterion",
+  "steps": 80,
+  "wall_s": 10.19601369999873,
+  "check_every": 10,
+  "max_steps": 20000,
+  "criterion": {
+   "type": "steady_state",
+   "rel_tol": 0.01,
+   "consecutive": 3,
+   "history": [
+    {
+     "step": 20,
+     "mean_dh_dt": 0.00042128815454724395,
+     "ratio_to_uplift": 0.42128815454724394
+    },
+    {
+     "step": 30,
+     "mean_dh_dt": 2.2889391235684343e-05,
+     "ratio_to_uplift": 0.022889391235684342
+    },
+    {
+     "step": 40,
+     "mean_dh_dt": -9.804315612392315e-05,
+     "ratio_to_uplift": 0.09804315612392316
+    },
+    {
+     "step": 50,
+     "mean_dh_dt": -3.42597968476905e-05,
+     "ratio_to_uplift": 0.034259796847690496
+    },
+    {
+     "step": 60,
+     "mean_dh_dt": -4.971074730457531e-06,
+     "ratio_to_uplift": 0.004971074730457531
+    },
+    {
+     "step": 70,
+     "mean_dh_dt": -1.687205386836922e-06,
+     "ratio_to_uplift": 0.001687205386836922
+    },
+    {
+     "step": 80,
+     "mean_dh_dt": -9.434793924701807e-07,
+     "ratio_to_uplift": 0.0009434793924701807
+    }
+   ]
+  }
+ },
+ "target_fraction": null
+}

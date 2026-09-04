@@ -7,6 +7,7 @@ import numpy as np
 from lem_viewer.channels.base import ChannelProvider
 from lem_viewer.models import DisplayDefaults, TerrainChannel, TerrainDataset
 from lem_viewer.registry import registry
+from lem_viewer.semantics import find_elevation_channel
 
 
 @registry.channel_provider("slope")
@@ -14,10 +15,10 @@ class SlopeProvider(ChannelProvider):
     """Compute slope magnitude from an elevation channel."""
 
     def can_provide(self, dataset: TerrainDataset) -> bool:
-        return "elevation" in dataset.channels
+        return find_elevation_channel(dataset) is not None
 
     def provide(self, dataset: TerrainDataset) -> list[TerrainChannel]:
-        elev = dataset.get_channel("elevation").get_array()
+        elev = find_elevation_channel(dataset).get_array()
         dy, dx = dataset.spacing
         grad_y, grad_x = np.gradient(elev, dy, dx)
         slope = np.sqrt(grad_x**2 + grad_y**2)
@@ -40,10 +41,10 @@ class HillshadeProvider(ChannelProvider):
     altitude_deg: float = 45.0
 
     def can_provide(self, dataset: TerrainDataset) -> bool:
-        return "elevation" in dataset.channels
+        return find_elevation_channel(dataset) is not None
 
     def provide(self, dataset: TerrainDataset) -> list[TerrainChannel]:
-        elev = dataset.get_channel("elevation").get_array()
+        elev = find_elevation_channel(dataset).get_array()
         dy, dx = dataset.spacing
         grad_y, grad_x = np.gradient(elev, dy, dx)
 

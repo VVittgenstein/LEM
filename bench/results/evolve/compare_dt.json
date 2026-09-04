@@ -1,0 +1,24 @@
+{
+ "dt500": {
+  "z_max": 8724.14284733047,
+  "z_mean_core": 3086.3454956502997,
+  "local_minima": 0,
+  "A_max": 69388000000.0
+ },
+ "dt10000": {
+  "z_max": 8377.565677122177,
+  "z_mean_core": 3072.913282122792,
+  "local_minima": 0,
+  "A_max": 69534000000.0
+ },
+ "difference_dt10000_minus_dt500": {
+  "mean_m": -13.43221352750815,
+  "mean_abs_m": 364.8639269078667,
+  "rms_m": 590.2276980684059,
+  "max_abs_m": 3776.4151777567195,
+  "corr_elevation": 0.929933104642715,
+  "corr_log10_area": 0.7322908766482362,
+  "share_cells_same_log10A_band_0.5": 0.82476895533943
+ },
+ "note": "same parameters, seed, and total time (10 Myr); only dt differs"
+}

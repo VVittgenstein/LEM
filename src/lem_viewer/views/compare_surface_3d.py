@@ -59,14 +59,10 @@ class CompareSurface3DView(ViewPlugin):
         secondary: str = kwargs.get(
             "secondary_channel", dataset.channel_names[0]
         )
-        max_display_size: int = kwargs.get("max_display_size", 512)
+        display = {k: v for k, v in kwargs.items() if k in ("max_display_size", "palette", "levels", "vertical_exaggeration")}
 
         builder = Surface3DView()
-        left = builder.create_widget(
-            dataset, channel_name=primary, max_display_size=max_display_size
-        )
-        right = builder.create_widget(
-            dataset, channel_name=secondary, max_display_size=max_display_size
-        )
+        left = builder.create_gl_view(dataset, channel_name=primary, **display)
+        right = builder.create_gl_view(dataset, channel_name=secondary, **display)
 
         return CompareWidget(left, right)

@@ -1,0 +1,9 @@
+[dippingdyke] step 10 t=1.000 Myr  step 142 ms  elapsed 1 s
+[dippingdyke] step 20 t=2.000 Myr  step 122 ms  elapsed 3 s
+[dippingdyke] step 30 t=3.000 Myr  step 119 ms  elapsed 4 s
+[dippingdyke] step 40 t=4.000 Myr  step 121 ms  elapsed 5 s
+[dippingdyke] step 50 t=5.000 Myr  step 122 ms  elapsed 6 s
+[dippingdyke] step 60 t=6.000 Myr  step 123 ms  elapsed 8 s
+[dippingdyke] step 70 t=7.000 Myr  step 121 ms  elapsed 9 s
+[dippingdyke] step 80 t=8.000 Myr  step 120 ms  elapsed 10 s
+written F:\LEM\bench\results\examples\dippingdyke steps 80 reason criterion

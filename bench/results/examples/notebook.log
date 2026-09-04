@@ -1,0 +1,7 @@
+[notebook] step 100 t=0.200 Myr  step 486 ms  elapsed 49 s
+[notebook] step 200 t=0.400 Myr  step 469 ms  elapsed 95 s
+[notebook] step 300 t=0.600 Myr  step 367 ms  elapsed 132 s
+[notebook] step 400 t=0.800 Myr  step 334 ms  elapsed 166 s
+[notebook] step 500 t=1.000 Myr  step 333 ms  elapsed 199 s
+written F:\LEM\bench\results\examples\notebook steps 500 reason criterion
+T007_DONE 

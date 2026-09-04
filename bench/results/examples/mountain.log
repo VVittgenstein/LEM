@@ -1,0 +1,13 @@
+[mountain] step 10 t=1.000 Myr  step 264 ms  elapsed 3 s
+[mountain] step 20 t=2.000 Myr  step 311 ms  elapsed 6 s
+[mountain] step 30 t=3.000 Myr  step 402 ms  elapsed 10 s
+[mountain] step 40 t=4.000 Myr  step 503 ms  elapsed 15 s
+[mountain] step 50 t=5.000 Myr  step 586 ms  elapsed 21 s
+[mountain] step 60 t=6.000 Myr  step 647 ms  elapsed 27 s
+[mountain] step 70 t=7.000 Myr  step 679 ms  elapsed 34 s
+[mountain] step 80 t=8.000 Myr  step 686 ms  elapsed 41 s
+[mountain] step 90 t=9.000 Myr  step 683 ms  elapsed 48 s
+[mountain] step 100 t=10.000 Myr  step 683 ms  elapsed 54 s
+[mountain] step 110 t=11.000 Myr  step 682 ms  elapsed 61 s
+[mountain] step 120 t=12.000 Myr  step 682 ms  elapsed 68 s
+written F:\LEM\bench\results\examples\mountain steps 120 reason criterion

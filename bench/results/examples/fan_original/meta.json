@@ -1,0 +1,88 @@
+{
+ "written_utc": "2026-09-04T05:31:52.100551+00:00",
+ "settings": {
+  "label": "fan_original",
+  "nx": 101,
+  "ny": 201,
+  "dx_m": 100.0,
+  "dt_yr": 2000.0,
+  "kf": 0.0001,
+  "kfsed": 0.00015,
+  "m": 0.4,
+  "n": 1.0,
+  "kd": 0.01,
+  "kdsed": 0.015,
+  "g1": 1.0,
+  "g2": 1.0,
+  "p": 1.0,
+  "single_flow_direction": false,
+  "bc": 1000,
+  "uplift_m_per_yr": 0.0,
+  "seed": 1234,
+  "initial_topography": "custom (see meta)",
+  "library": "fastscapelib-fortran 2.8.4 (FastScape API via Python)"
+ },
+ "steps": 200,
+ "time_yr": 400000.0,
+ "channels": {
+  "elevation": {
+   "file": "elevation.npy",
+   "units": "m",
+   "kind": "elevation"
+  },
+  "drainage_area": {
+   "file": "drainage_area.npy",
+   "units": "m2",
+   "kind": "drainage_area",
+   "display": "log10"
+  }
+ },
+ "grid": {
+  "nx": 101,
+  "ny": 201,
+  "dx_m": 100.0,
+  "dy_m": 100.0
+ },
+ "timing": {
+  "setup_s": 0.000930599999264814,
+  "steps_total_s": 3.891876100053196,
+  "step_mean_s": 0.01945938050026598,
+  "step_first_s": 0.015962100005708635,
+  "step_last_s": 0.016702399996574968
+ },
+ "output": {
+  "z_min": 0.006208516587129398,
+  "z_max": 654.3277882441436,
+  "z_mean": 115.96774236589259,
+  "A_max": 152739318.7493352,
+  "finite": true,
+  "lake_cells": 0
+ },
+ "task": "T-007",
+ "example": "fan_original",
+ "info": {
+  "source": "examples/Fan.f90",
+  "original_grid": "101x201, 10x20 km, dt 2e3 yr, 200 steps",
+  "plateau": "1000 m where y > yl/2",
+  "check_every": 200
+ },
+ "loop": {
+  "stop_reason": "max_steps",
+  "steps": 200,
+  "wall_s": 3.892411599998013,
+  "check_every": 200,
+  "max_steps": 200,
+  "criterion": {
+   "type": "plateau_fraction",
+   "target": 2.0,
+   "final_fraction": 0.7862564488782613,
+   "history": [
+    {
+     "step": 200,
+     "eroded_fraction": 0.7862564488782613
+    }
+   ]
+  }
+ },
+ "target_fraction": null
+}

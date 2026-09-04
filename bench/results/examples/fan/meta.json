@@ -1,0 +1,104 @@
+{
+ "written_utc": "2026-09-04T05:38:27.094708+00:00",
+ "settings": {
+  "label": "fan",
+  "nx": 500,
+  "ny": 500,
+  "dx_m": 1000.0,
+  "dt_yr": 2000.0,
+  "kf": 0.0001,
+  "kfsed": 0.00015,
+  "m": 0.4,
+  "n": 1.0,
+  "kd": 0.01,
+  "kdsed": 0.015,
+  "g1": 1.0,
+  "g2": 1.0,
+  "p": 1.0,
+  "single_flow_direction": false,
+  "bc": 1000,
+  "uplift_m_per_yr": 0.0,
+  "seed": 1234,
+  "initial_topography": "custom (see meta)",
+  "library": "fastscapelib-fortran 2.8.4 (FastScape API via Python)"
+ },
+ "steps": 500,
+ "time_yr": 1000000.0,
+ "channels": {
+  "elevation": {
+   "file": "elevation.npy",
+   "units": "m",
+   "kind": "elevation"
+  },
+  "drainage_area": {
+   "file": "drainage_area.npy",
+   "units": "m2",
+   "kind": "drainage_area",
+   "display": "log10"
+  }
+ },
+ "grid": {
+  "nx": 500,
+  "ny": 500,
+  "dx_m": 1000.0,
+  "dy_m": 1000.0
+ },
+ "timing": {
+  "setup_s": 0.006401199992978945,
+  "steps_total_s": 207.57719690001977,
+  "step_mean_s": 0.41515439380003955,
+  "step_first_s": 0.28042319999076426,
+  "step_last_s": 0.3639009000035003
+ },
+ "output": {
+  "z_min": 0.0021894308231216186,
+  "z_max": 711.390224357075,
+  "z_mean": 101.38266979871467,
+  "A_max": 94244151893.34074,
+  "finite": true,
+  "lake_cells": 14
+ },
+ "task": "T-007",
+ "example": "fan",
+ "info": {
+  "source": "examples/Fan.f90",
+  "original_grid": "101x201, 10x20 km, dt 2e3 yr, 200 steps",
+  "plateau": "1000 m where y > yl/2",
+  "check_every": 100
+ },
+ "loop": {
+  "stop_reason": "criterion",
+  "steps": 500,
+  "wall_s": 207.5858956000011,
+  "check_every": 100,
+  "max_steps": 20000,
+  "criterion": {
+   "type": "plateau_fraction",
+   "target": 0.7862564488782613,
+   "final_fraction": 0.8133446782313639,
+   "history": [
+    {
+     "step": 100,
+     "eroded_fraction": 0.181202255019489
+    },
+    {
+     "step": 200,
+     "eroded_fraction": 0.4566240860193188
+    },
+    {
+     "step": 300,
+     "eroded_fraction": 0.6358192094918195
+    },
+    {
+     "step": 400,
+     "eroded_fraction": 0.741594600845513
+    },
+    {
+     "step": 500,
+     "eroded_fraction": 0.8133446782313639
+    }
+   ]
+  }
+ },
+ "target_fraction": 0.7862564488782613
+}

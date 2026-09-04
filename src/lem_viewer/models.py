@@ -29,18 +29,26 @@ class ChannelStats:
 
 @dataclasses.dataclass
 class DisplayDefaults:
-    """Default display settings for a channel."""
+    """Default display settings for a channel.
+
+    ``palette`` and ``levels`` drive the banded (discrete) colour scale used by the map and
+    surface views; ``colormap`` is kept for compatibility with earlier callers.
+    """
 
     colormap: str = "terrain"
     vmin: float | None = None
     vmax: float | None = None
+    palette: str = "fem"
+    levels: int = 12
 
 
 @dataclasses.dataclass
 class TerrainChannel:
     """A single data channel (raw or derived) in a terrain dataset.
 
-    Supports both eager (array) and lazy (lazy_loader) data access.
+    Supports both eager (array) and lazy (lazy_loader) data access. ``kind`` says what the
+    channel represents (``elevation``, ``drainage_area``, ``generic``) and ``transform`` how it is
+    mapped to display space (``linear`` or ``log10``).
     """
 
     name: str
@@ -53,6 +61,8 @@ class TerrainChannel:
     display_defaults: DisplayDefaults | None = dataclasses.field(
         default_factory=DisplayDefaults
     )
+    kind: str = "generic"
+    transform: str = "linear"
 
     def get_array(self) -> np.ndarray:
         """Return the channel's array, triggering lazy load if needed."""
@@ -61,6 +71,12 @@ class TerrainChannel:
         if self.array is None:
             raise ValueError(f"Channel '{self.name}' has no data loaded")
         return self.array
+
+    def display_array(self) -> np.ndarray:
+        """Return the array in display space (e.g. log10 for drainage area)."""
+        from lem_viewer.semantics import display_array
+
+        return display_array(self.get_array(), self.transform)
 
     @property
     def is_loaded(self) -> bool:

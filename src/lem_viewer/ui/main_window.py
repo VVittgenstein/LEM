@@ -72,6 +72,19 @@ class MainWindow(QMainWindow):
         cp.compare_toggled.connect(self._on_setting_changed)
         cp.secondary_channel_changed.connect(self._on_setting_changed)
         cp.display_size_changed.connect(self._on_setting_changed)
+        cp.view_mode_changed.connect(self._on_setting_changed)
+        cp.palette_changed.connect(self._on_setting_changed)
+        cp.levels_changed.connect(self._on_setting_changed)
+        cp.vertical_exaggeration_changed.connect(self._on_setting_changed)
+
+    def _display_kwargs(self) -> dict[str, Any]:
+        cp = self._control_panel
+        return {
+            "max_display_size": cp.max_display_size,
+            "palette": cp.palette,
+            "levels": cp.levels,
+            "vertical_exaggeration": cp.vertical_exaggeration,
+        }
 
     # -- Public API --------------------------------------------------
 
@@ -95,6 +108,9 @@ class MainWindow(QMainWindow):
         """Load a dataset and refresh the view."""
         self._dataset = dataset
         self._control_panel.set_channels(dataset.channel_names)
+        primary = dataset.metadata.get("primary_channel")
+        if primary in dataset.channels:
+            self._control_panel.set_primary_channel(primary)
         self._rebuild_view()
 
     # -- View management ---------------------------------------------
@@ -130,13 +146,18 @@ class MainWindow(QMainWindow):
             logger.warning("Could not create 3D view", exc_info=True)
 
     def _build_single_view(self, channel_name: str) -> None:
-        from lem_viewer.views.surface_3d import Surface3DView
+        if self._control_panel.view_mode == "map_2d":
+            from lem_viewer.views.map_2d import Map2DView
 
-        plugin = Surface3DView()
+            plugin: Any = Map2DView()
+        else:
+            from lem_viewer.views.surface_3d import Surface3DView
+
+            plugin = Surface3DView()
         widget = plugin.create_widget(
             self._dataset,
             channel_name=channel_name,
-            max_display_size=self.max_display_size,
+            **self._display_kwargs(),
         )
         self._current_view = widget
         self._view_layout.addWidget(widget)
@@ -150,7 +171,7 @@ class MainWindow(QMainWindow):
             self._dataset,
             primary_channel=primary,
             secondary_channel=secondary or primary,
-            max_display_size=self.max_display_size,
+            **self._display_kwargs(),
         )
         self._current_view = widget
         self._view_layout.addWidget(widget)

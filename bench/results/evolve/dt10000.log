@@ -1,0 +1,11 @@
+[evolve dt=10000] step 100 t=1.000 Myr  step 66 ms  elapsed 7 s
+[evolve dt=10000] step 200 t=2.000 Myr  step 56 ms  elapsed 12 s
+[evolve dt=10000] step 300 t=3.000 Myr  step 54 ms  elapsed 18 s
+[evolve dt=10000] step 400 t=4.000 Myr  step 52 ms  elapsed 23 s
+[evolve dt=10000] step 500 t=5.000 Myr  step 52 ms  elapsed 28 s
+[evolve dt=10000] step 600 t=6.000 Myr  step 51 ms  elapsed 33 s
+[evolve dt=10000] step 700 t=7.000 Myr  step 52 ms  elapsed 38 s
+[evolve dt=10000] step 800 t=8.000 Myr  step 51 ms  elapsed 43 s
+[evolve dt=10000] step 900 t=9.000 Myr  step 51 ms  elapsed 49 s
+[evolve dt=10000] step 1000 t=10.000 Myr  step 51 ms  elapsed 54 s
+written F:\LEM\bench\results\evolve\dt10000
