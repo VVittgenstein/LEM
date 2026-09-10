@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# Public paths and publication workflow: project-rules/git-publication.md.
+remote_name="$1"
+zero=0000000000000000000000000000000000000000
+
+reject() {
+  echo "Push rejected: $*" >&2
+  exit 1
+}
+
+[ "$remote_name" = origin ] || reject "only the origin remote is allowed."
+
+while read -r local_ref local_oid remote_ref remote_oid
+do
+  [ "$local_ref" = refs/heads/public ] && [ "$remote_ref" = refs/heads/main ] ||
+    reject "only refs/heads/public -> refs/heads/main is allowed."
+  [ "$local_oid" != "$zero" ] || reject "deleting the public branch is not allowed."
+  git cat-file -e "$local_oid^{commit}" || reject "local commit is unavailable."
+
+  if [ "$remote_oid" != "$zero" ]; then
+    git cat-file -e "$remote_oid^{commit}" || reject "fetch origin before publishing."
+    git merge-base --is-ancestor "$remote_oid" "$local_oid" ||
+      reject "publication must fast-forward origin/main."
+    commits=$(git rev-list "$remote_oid..$local_oid") || reject "cannot inspect outgoing commits."
+  else
+    commits=$(git rev-list "$local_oid") || reject "cannot inspect public history."
+  fi
+
+  allowlist=$(git show "$local_oid:project-rules/public-paths.txt") ||
+    reject "public-paths.txt is missing from the public commit."
+  [ -n "$allowlist" ] || reject "the public path list is empty."
+
+  for commit in $commits
+  do
+    paths=$(git -c core.quotePath=false ls-tree -r --name-only "$commit") ||
+      reject "cannot inspect the file tree of $commit."
+    rejected=$(printf '%s\n' "$paths" | while IFS= read -r path
+    do
+      allowed=0
+      while IFS= read -r rule
+      do
+        [ -n "$rule" ] || continue
+        case "$rule" in
+          */) case "$path" in "$rule"*) allowed=1 ;; esac ;;
+          *) [ "$path" = "$rule" ] && allowed=1 ;;
+        esac
+      done <<EOF
+$allowlist
+EOF
+      [ "$allowed" = 1 ] || printf '%s\n' "$path"
+    done)
+    if [ -n "$rejected" ]; then
+      printf 'Files outside the public path list in %s:\n%s\n' "$commit" "$rejected" >&2
+      reject "private paths must not enter public history."
+    fi
+  done
+done
+
+exit 0

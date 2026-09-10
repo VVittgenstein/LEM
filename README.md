@@ -1,5 +1,7 @@
 # LEM-Diffusion / LEM-Diffusion 地形生成项目
 
+当前项目计划以 [`final-strategy/README.md`](final-strategy/README.md) 为入口，任务与阶段进展见 [`current.md`](current.md)，项目协作规则见 [`AGENTS.md`](AGENTS.md) 和 [`project-rules/`](project-rules/)。以下内容包含项目早期概述；当前范围与状态以最终策略和台账为准。计划与台账中的部分来源保存在本地会话或参考材料中，公开仓库不包含这些来源全文。
+
 ## 项目目标 / Project Goal
 
 **中文**

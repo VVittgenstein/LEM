@@ -1,0 +1,2 @@
+project-rules/pre-push text eol=lf
+project-rules/public-paths.txt text eol=lf
