@@ -2,7 +2,24 @@
 
 当前项目计划以 [`final-strategy/README.md`](final-strategy/README.md) 为入口，任务与阶段进展见 [`current.md`](current.md)，项目协作规则见 [`AGENTS.md`](AGENTS.md) 和 [`project-rules/`](project-rules/)。以下内容包含项目早期概述；当前范围与状态以最终策略和台账为准。计划与台账中的部分来源保存在本地会话或参考材料中，公开仓库不包含这些来源全文。
 
-## 项目目标 / Project Goal
+## 当前状态 / Current Status
+
+2026-09-12，yZz确认 **数据4（初始台地二维形状）与数据1（初始海底高程和海平面）已完成并验收**。当前成果按四阶段组织：
+
+| 阶段 | 代码与说明 | 入口 |
+|---|---|---|
+| 台地掩膜 | [mask_generator](pipline/mask_generator/README.md)，512分区、外围3层禁选，500×500、1 km格距 | `pipline/mask_generator/run_world_orogen_gibbs.ps1` |
+| 深浅海类型分配 | [seafloor_generator](pipline/seafloor_generator/README.md)，四个拟合函数与完整地块组合 | `pipline/seafloor_generator/run.ps1` |
+| 初始海底 | [initial_bathymetry](pipline/initial_bathymetry/README.md)，固定剖面、相关起伏、等高线和剖面图 | `pipline/initial_bathymetry/run.ps1` |
+| 海平面 | [sea_level](pipline/sea_level/README.md)，4800万年至现代的单一年代曲线和SVG | `pipline/sea_level/run.ps1` |
+
+生成文件及原数据按 `.gitignore` 保留在本地，各模块说明记录输入、产物路径和哈希。台地面积50%至60%为软偏好，34个陆块作形状参考。初始高程为全域水下，模拟窗口海平面起点为0 m。
+
+下一范围为数据2、3、5的复核、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+
+The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. Review of the remaining input classes, integration with the LEM driver and end-state validation are still pending.
+
+## 早期项目概述 / Early Project Overview
 
 **中文**
 
@@ -27,7 +44,7 @@ than only producing a plain heightmap, the project aims to use the multi-level
 outputs of a cascade diffusion model as native LOD data. The planned MVP is a
 Forge + Distant Horizons integration, followed later by a Fabric + Voxy phase.
 
-## 为什么做这个 / Why This Exists
+## 早期动机与概念 / Early Motivation
 
 **中文**
 
@@ -65,37 +82,6 @@ The key architectural insight is that cascade diffusion levels and game LOD
 levels are structurally aligned. Low-resolution global terrain provides
 world-scale coherence, while higher-resolution tiles add local detail.
 
-## 当前状态 / Current Status
-
-**中文**
-
-项目目前处在 Phase 1：数据管线工程化和工具建设。
-
-已经完成的基础工作：
-
-- 梳理了 Terrain Diffusion、InfiniteDiffusion、Laplacian 编码和 Veloren
-  worldgen 相关资料。
-- 已有 Landlab 风格的 LEM 实验脚本和地形可视化脚本。
-- 已实现一个辅助工具 LEM Terrain Viewer，用于交互式检查 `.npy` 地形输出。
-
-下一步主线工作是：构建可重复的多通道 LEM 数据生成管线，实现可逆 Laplacian
-Pyramid 编码，定义轻量数据 schema，并训练一个小型端到端 diffusion prototype。
-
-**English**
-
-The project is currently in Phase 1: data-pipeline engineering and tooling.
-
-Completed groundwork:
-
-- Terrain Diffusion, InfiniteDiffusion, Laplacian encoding, and Veloren
-  worldgen references have been reviewed and distilled.
-- Landlab-style LEM experiments and terrain visualization scripts exist.
-- A side tool, LEM Terrain Viewer, has been implemented to inspect `.npy`
-  terrain outputs interactively.
-
-The next mainline work is to build a repeatable multi-channel LEM data
-generation pipeline, implement reversible Laplacian Pyramid encoding, define a
-lightweight dataset schema, and train a small end-to-end diffusion prototype.
 
 ## 路线图 / Roadmap
 
