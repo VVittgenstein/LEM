@@ -1,0 +1,85 @@
+{
+  "settings": {
+    "size": 500,
+    "cell_km": 1.0,
+    "band": 0,
+    "partition_count": 512,
+    "coarse_side": 160,
+    "point_jitter": 0.75,
+    "warp_multiplier": 0.5,
+    "field_sigmas_km": [
+      15.0,
+      45.0,
+      120.0
+    ],
+    "field_weights": [
+      0.3,
+      0.85,
+      0.65
+    ],
+    "center_weight": 5000.0,
+    "spread_weight": 1600.0,
+    "perimeter_weight": 15.0,
+    "field_weight": 600.0,
+    "area_weight": 60.0,
+    "area_softness": 0.12,
+    "area_low": 0.5,
+    "area_high": 0.6,
+    "temperature": 1.0,
+    "boundary_layers": 3
+  },
+  "status": "selected default for initial underwater-platform shape generation",
+  "pilot_seeds": [
+    7001,
+    7002,
+    7003
+  ],
+  "pilot_variants": [
+    "baseline",
+    "centered",
+    "multiscale"
+  ],
+  "rationale": "The stronger center/spread terms reduce peripheral layout. More middle-scale field weight retains large secondary structures in the pilot. No five-class quotas or numerical frequency fit.",
+  "fixed_display_seeds": [
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006
+  ],
+  "partition_counts": [
+    512
+  ],
+  "sampling": {
+    "burn": 4096,
+    "draws": 2048,
+    "thin": 4,
+    "chains": 4,
+    "temperatures": [
+      1.0,
+      1.18,
+      1.3923999999999999,
+      1.6430319999999998,
+      1.9387777599999996,
+      2.2877577567999996,
+      2.6995541530239993,
+      3.185473900568319,
+      3.758859202670616,
+      4.435453859151327,
+      5.233835553798565,
+      6.175925953482307,
+      7.287592625109121,
+      8.599359297628762
+    ]
+  },
+  "sampling_rationale": "Pilot global diagnostics mostly passed, but two per-region failures and low adjacent-temperature swaps justify longer runs and a closer temperature ladder.",
+  "selection": {
+    "date": "2026-09-11",
+    "user_quote": "好，我确定了，我们的水下台地的形状就使用这个512分区 3层禁止",
+    "record": "SELECTED_PROFILE.md",
+    "source_batch": "F:\\LEM\\output\\mask_generator\\world_orogen_gibbs_layers_3\\partitions_512",
+    "scope": "initial two-dimensional underwater-platform shape",
+    "other_numerical_parameters": "unchanged from the selected batch"
+  }
+}

@@ -13,3 +13,7 @@ scripts/
 src/
 tests/
 bench/
+pipline/mask_generator/
+pipline/seafloor_generator/
+pipline/initial_bathymetry/
+pipline/sea_level/

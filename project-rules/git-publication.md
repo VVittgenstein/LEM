@@ -32,6 +32,8 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 2026-09-09，yZz 要求修改 public/private 分配并推送，将必备的项目计划纳入公开范围，明确列出 `final-strategy/`、`current.md`、`AGENTS.md`、`CLAUDE.md`。这些文件直接引用的 `project-rules/` 与策略迁移入口 `final-strategy.md` 一并公开，使公开副本具备完整的项目规则和入口。
 
+2026-09-12，yZz要求先更新current与项目文档，再将四个输入阶段分别提交并推至远端。此次明确公开的新增代码目录为 `pipline/mask_generator/`、`pipline/seafloor_generator/`、`pipline/initial_bathymetry/`、`pipline/sea_level/`，四阶段各保留一个公开提交。该范围包含对应代码、配置、测试、许可与说明；生成产物、数据集、环境，以及私有历史与参考文件继续按下述边界处理。指示来源见 `docs/work/2026-09-12-input-stages-closeout/decisions.md` 的U13、U14。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录。当前清单为：
 
 - `.gitattributes`
@@ -49,6 +51,10 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `src/`
 - `tests/`
 - `bench/`，包括已批准公开的脚本、日志与文本结果；生成数组、图片和存储目录按 `.gitignore` 排除。
+- `pipline/mask_generator/`
+- `pipline/seafloor_generator/`
+- `pipline/initial_bathymetry/`
+- `pipline/sea_level/`
 
 `docs/`（包括历史会话、旧计划、研究过程与运行记录）和 `references/` 保留在 `private`。`datasets/`、`output/`、环境与缓存按 `.gitignore` 排除。公开文件中对本地材料的路径引用只保留来源定位，不使被引用的文件进入公开范围；这些引用在公开副本中可能无法访问。用户原话与来源定位保持原文。
 
