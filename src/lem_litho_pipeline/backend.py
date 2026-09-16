@@ -71,9 +71,9 @@ def run(config, inputs):
             "spl__g_coef_bedrock": 0.0, "spl__g_coef_soil": 1.0,
             "label__dz": config.dz, "label__origin_z": 0.0,
             "label__labelmatrix": inputs.labels,
-            "spl__Kr_lab": [m["Kr"] for m in MATERIALS],
-            "diffusion__Kdr_lab": [m["Kdr"] for m in MATERIALS],
-            "diffusion__Kds_lab": [m["Kds"] for m in MATERIALS],
+            "spl__Kr_lab": [m["Kr"] * config.erodibility_scale for m in MATERIALS],
+            "diffusion__Kdr_lab": [m["Kdr"] * config.diffusion_scale for m in MATERIALS],
+            "diffusion__Kds_lab": [m["Kds"] * config.diffusion_scale for m in MATERIALS],
         },
         output_vars={name: "save" for name in (
             "topography__elevation", "drainage__area", "erosion__cumulative_height",

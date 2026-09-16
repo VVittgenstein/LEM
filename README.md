@@ -1,4 +1,4 @@
-# LEM-Diffusion / LEM-Diffusion 地形生成项目
+# LEM-Diffusion
 
 当前项目计划以 [`final-strategy/README.md`](final-strategy/README.md) 为入口，任务与阶段进展见 [`current.md`](current.md)，项目协作规则见 [`AGENTS.md`](AGENTS.md) 和 [`project-rules/`](project-rules/)。以下内容包含项目早期概述；当前范围与状态以最终策略和台账为准。计划与台账中的部分来源保存在本地会话或参考材料中，公开仓库不包含这些来源全文。
 
@@ -57,7 +57,8 @@ This project explores the bridge between those constraints:
 
 1. Generate physically grounded terrain datasets with Landlab/Fastscape-style
    LEM pipelines.
-2. Train a small diffusion model on heightmaps and related terrain channels.
+2. Train a small unconditional diffusion model on heightmaps and related terrain
+   channels.
 3. Move toward conditional, multi-channel, and cascade generation.
 4. Use the cascade structure itself as native LOD data for game integration.
 
@@ -167,7 +168,7 @@ pipeline is being built.
 
 It currently supports:
 
-- Loading a single `.npy` terrain array.
+- Loading a single `.npy` file.
 - Loading a directory of same-shaped `.npy` files as named channels.
 - Interactive 3D OpenGL terrain surfaces.
 - Derived `slope` and `hillshade` channels when `elevation` exists.
@@ -243,7 +244,7 @@ launch_terrain_viewer.bat
 
 **English**
 
-If startup fails, the Windows launcher keeps the console open so dependency or
+If startup fails, the Windows launcher keeps the console window open so dependency or
 environment errors are readable.
 
 ## 数据约定 / Data Expectations
@@ -265,9 +266,18 @@ The implemented `.npy` loader expects 2D arrays:
 - Length-1 dimensions are squeezed when possible.
 - A single file becomes one channel named after the file stem.
 - A directory loads every `.npy` file as a channel.
-- All arrays in a directory dataset must share the same 2D shape.
+- All arrays in a directory dataset must have the same 2D shape.
 - If an `elevation` channel exists, `slope` and `hillshade` are computed
   automatically.
+
+## Fastscape Lithology 管线 / Fastscape Lithology Pipeline
+
+实验性三维岩性管线的运行方式、输入定义、诊断指标、产物和限制见
+[`src/lem_litho_pipeline/README.md`](src/lem_litho_pipeline/README.md)。
+
+See [`src/lem_litho_pipeline/README.md`](src/lem_litho_pipeline/README.md) for
+the experimental 3D-lithology pipeline, including its commands, inputs,
+diagnostics, artifacts, and limitations.
 
 ## 测试 / Tests
 
