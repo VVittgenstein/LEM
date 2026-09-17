@@ -1,0 +1,8 @@
+/inputs/
+/vendor/
+/bases/
+/output/
+/pilot*/
+/checks/
+/__pycache__/
+/manifest.json

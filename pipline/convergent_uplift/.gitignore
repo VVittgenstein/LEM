@@ -1,0 +1,7 @@
+__pycache__/
+sources/
+output/
+checks/
+tables/
+research/
+/module_manifest.json

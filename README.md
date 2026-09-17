@@ -15,9 +15,11 @@
 
 生成文件及原数据按 `.gitignore` 保留在本地，各模块说明记录输入、产物路径和哈希。台地面积50%至60%为软偏好，34个陆块作形状参考。初始高程为全域水下，模拟窗口海平面起点为0 m。
 
-下一范围为数据2、3、5的复核、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+2026-09-17，yZz确认 **数据2中的汇聚带抬升子管线已完成并验收**。每次触发创建完整独立事件，空间形态、作用位置、强度场和连续生命周期一起确定。已交付8个数据域的13个独立事件及各自A至E图，包含97个时刻画面。入口为 [convergent_uplift](pipline/convergent_uplift/README.md)，时间与事件入口为 `pipline/convergent_uplift/run_time.ps1`；接口提供m/yr速率与m累计位移。案例代理和设计参数的依据身份随模块说明保留。
 
-The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. Review of the remaining input classes, integration with the LEM driver and end-state validation are still pending.
+下一范围为数据2其余活动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+
+The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. The convergent-uplift input pipeline was accepted on 2026-09-17. Each trigger creates an independent event with its own spatial field, placement and lifecycle. The delivered batch contains 13 events across eight domains. Remaining activity types, other input classes, LEM integration and end-state validation continue separately.
 
 ## 早期项目概述 / Early Project Overview
 

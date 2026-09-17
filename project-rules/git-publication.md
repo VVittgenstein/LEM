@@ -34,6 +34,8 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 2026-09-12，yZz要求先更新current与项目文档，再将四个输入阶段分别提交并推至远端。此次明确公开的新增代码目录为 `pipline/mask_generator/`、`pipline/seafloor_generator/`、`pipline/initial_bathymetry/`、`pipline/sea_level/`，四阶段各保留一个公开提交。该范围包含对应代码、配置、测试、许可与说明；生成产物、数据集、环境，以及私有历史与参考文件继续按下述边界处理。指示来源见 `docs/work/2026-09-12-input-stages-closeout/decisions.md` 的U13、U14。
 
+2026-09-17，yZz确认汇聚带抬升工作完成，明确要求更新current与项目文档、按项目规则提交并推送至现有Main。该指示覆盖 `pipline/convergent_uplift/` 的源码、源内设计配置、测试与说明，以及本轮台账、策略和发布范围更新。模块原始资料、拟合参数包、数组、图像、检查产物与运行清单按生成产物规则排除；背景场、其他活动及无关工作不纳入本次新增公开范围。来源见 `docs/work/2026-09-17-convergent-uplift-closeout/decisions.md` U1。远端实际分支名为main，沿用public到origin/main的映射。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录。当前清单为：
 
 - `.gitattributes`
@@ -55,6 +57,7 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `pipline/seafloor_generator/`
 - `pipline/initial_bathymetry/`
 - `pipline/sea_level/`
+- `pipline/convergent_uplift/`
 
 `docs/`（包括历史会话、旧计划、研究过程与运行记录）和 `references/` 保留在 `private`。`datasets/`、`output/`、环境与缓存按 `.gitignore` 排除。公开文件中对本地材料的路径引用只保留来源定位，不使被引用的文件进入公开范围；这些引用在公开副本中可能无法访问。用户原话与来源定位保持原文。
 
