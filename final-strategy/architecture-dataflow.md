@@ -215,7 +215,7 @@ yZz 2026-09-07 的定义：在 500 km×500 km 的完整数据域内，从文献�
 
 ##### 水下台地二维形状（第4类）
 
-当前选定方案为 **World Orogen平面分区与整组选区Gibbs抽样，512分区、外围3层禁选**。来源及最后有效用户表态见 [来源第47至49条](sources.md#platform-shape-20260911)；配置原话与实例见 [已选配置记录](../pipline/mask_generator/world_orogen_gibbs/SELECTED_PROFILE.md)。
+当前选定方案为 **World Orogen平面分区与整组选区Gibbs抽样，512分区、外围3层禁选**。来源及最后有效用户表态见 [来源第47至49条](sources.md#platform-shape-20260911)；配置原话与实例见 [已选配置记录](../data_generation/stage/mask_generator/world_orogen_gibbs/SELECTED_PROFILE.md)。
 
 | 项目 | 当前规则 |
 | --- | --- |
@@ -229,7 +229,7 @@ yZz 2026-09-07 的定义：在 500 km×500 km 的完整数据域内，从文献�
 | 参考数据 | 34个参考陆块继续用于形状参考与诊断；严格复现全部统计分布的要求已撤下 |
 | 输出与来源 | 掩膜、全部外轮廓与内部轮廓、分区、随机场、种子、完整配置、抽样记录、统计和可见图片；本环节不产生海底高程或活动时间表 |
 
-实现位于 `pipline/mask_generator/world_orogen_gibbs/`，默认入口为 `pipline/mask_generator/run_world_orogen_gibbs.ps1`。默认新产物写入 `output/mask_generator/world_orogen_gibbs_512_layers_3/`。已选配置对应的可见样本位于 `output/mask_generator/world_orogen_gibbs_layers_3/partitions_512/`；其余工程参数沿用该批次，完整数值与单位见 [生成器说明](../pipline/mask_generator/world_orogen_gibbs/README.md) 和 `experiment.json`。
+实现位于 `data_generation/stage/mask_generator/world_orogen_gibbs/`，默认入口为 `data_generation/stage/mask_generator/run_world_orogen_gibbs.ps1`。默认新产物写入 `output/mask_generator/world_orogen_gibbs_512_layers_3/`。已选配置对应的可见样本位于 `output/mask_generator/world_orogen_gibbs_layers_3/partitions_512/`；其余工程参数沿用该批次，完整数值与单位见 [生成器说明](../data_generation/stage/mask_generator/world_orogen_gibbs/README.md) 和 `experiment.json`。
 
 2026-09-12，yZz确认数据4已完成，验收对象为当前512分区、外围3层禁选的初始台地生成方法及其产物。三层禁选的实际距离由分区几何量取；海域与高程阶段采用同一掩膜。椭圆包络、参考叠加及其他分区数和禁选层数的代码保留作历史对照。终态海陆组织的验证继续属于后续LEM阶段。
 
@@ -244,10 +244,10 @@ yZz 2026-09-07 的定义：在 500 km×500 km 的完整数据域内，从文献�
 
 | 阶段 | 输入与输出 | 实现与可见成果 |
 |---|---|---|
-| 1 台地掩膜 | 512分区、3层禁选；输出500×500、1 km格距的布尔掩膜、完整分区和轮廓 | [mask_generator](../pipline/mask_generator/README.md)；验收批次为 `output/mask_generator/world_orogen_gibbs_layers_3/partitions_512/` |
-| 2 海域类型 | 复用原分区，输出按完整地块分配的浅海、深海标签，以及目标与实际沿岸统计 | [seafloor_generator](../pipline/seafloor_generator/README.md)；`output/seafloor_generator/mean_distance_v1/` |
-| 3 初始海底 | 复用掩膜与海域标签，输出基础高程、相关起伏、最终初始高程、距离与融合权重 | [initial_bathymetry](../pipline/initial_bathymetry/README.md)；`output/initial_bathymetry/fixed_profiles_v1/` |
-| 4 海平面 | 将三份资料按年代接续，输出距今4800万年至现代的单一曲线及模拟区间查询接口 | [sea_level](../pipline/sea_level/README.md)；`pipline/sea_level/output/`，含SVG主图 |
+| 1 台地掩膜 | 512分区、3层禁选；输出500×500、1 km格距的布尔掩膜、完整分区和轮廓 | [mask_generator](../data_generation/stage/mask_generator/README.md)；验收批次为 `output/mask_generator/world_orogen_gibbs_layers_3/partitions_512/` |
+| 2 海域类型 | 复用原分区，输出按完整地块分配的浅海、深海标签，以及目标与实际沿岸统计 | [seafloor_generator](../data_generation/stage/seafloor_generator/README.md)；`output/seafloor_generator/mean_distance_v1/` |
+| 3 初始海底 | 复用掩膜与海域标签，输出基础高程、相关起伏、最终初始高程、距离与融合权重 | [initial_bathymetry](../data_generation/stage/initial_bathymetry/README.md)；`output/initial_bathymetry/fixed_profiles_v1/` |
+| 4 海平面 | 将三份资料按年代接续，输出距今4800万年至现代的单一曲线及模拟区间查询接口 | [sea_level](../data_generation/stage/sea_level/README.md)；`data_generation/stage/sea_level/output/`，含SVG主图 |
 
 四阶段参数均属于数据生成输入。训练与推理使用的通道继续由L1各阶段的数据定义确定。原始数据、生成数组和图片按项目Git规则在本地保留，来源与产物哈希由各批次记录。
 
@@ -278,7 +278,7 @@ yZz 2026-09-07 的定义：在 500 km×500 km 的完整数据域内，从文献�
 
 用户确定采用距今4800万年至现代的一条曲线。较老部分采用Miller等2020年平滑版，98万年至79.8万年的间隔采用其未平滑版，较新部分采用Spratt与Lisiecki 2016年五记录堆叠版。
 
-当前实现于100万年至98万年前、79.8万年至79.4万年前分别作局部连续衔接，保留原始资料、来源权重及改动量。两处衔接窗口和插值方法属于已交付工程实现，见 [海平面方法与来源](../pipline/sea_level/README.md)。源数据按发布的年代模型及相对现代高程基准保存，现代端点估计为8.96 m。
+当前实现于100万年至98万年前、79.8万年至79.4万年前分别作局部连续衔接，保留原始资料、来源权重及改动量。两处衔接窗口和插值方法属于已交付工程实现，见 [海平面方法与来源](../data_generation/stage/sea_level/README.md)。源数据按发布的年代模型及相对现代高程基准保存，现代端点估计为8.96 m。
 
 模拟时间表从同一主曲线截取覆盖T的连续年代区间，随模拟时间向较新的年代推进，并减去所选区间的起始值，使模拟初始海平面为0 m。查询范围为0至4800万年BP，域外请求报错。统一导出1000年间隔、48001点；较老资料的2万年间隔及既有平滑程度仍保留，导出间隔不增加原始信息分辨率。此导出间隔与LEM数值步长分别核查。
 
@@ -286,13 +286,13 @@ yZz 2026-09-07 的定义：在 500 km×500 km 的完整数据域内，从文献�
 
 与 LEM 输入直接对应的地质活动类型有限：汇聚带抬升、裂谷、区域性升降、盆地沉降、断层活动、火山堆积、海平面变化、气候变化，以及作为属性的岩性差异。地貌由这些活动的数值、位置、组合、先后顺序与侵蚀、沉积过程的响应共同产生（Claude 说明，yZz 未提出异议）。放置规则、两种写入方式与周边地壳类型的说明由 Claude 提出，其中 yZz 在复述中采用的内容记为当前框架，未复述的细节保留 Claude 解释身份。2026-09-09，yZz 决定火山堆积移出当前范围：它指 Grosse 数据库所记的多成因火山锥与盾状火山，Fastscape 没有喷发堆积过程，只能以局部快速抬升近似，且 1 km 格上的增高速率、建设持续时间与到海岸距离均未找到；以后需要时再加入。
 
-当前实现衔接：四个独立初始输入阶段与汇聚带抬升子管线已验收，阶段2和3读取选定的mask及海域标签，阶段4提供海平面查询和连续区间截取接口。旧 `src/lem_pipeline/sample.py` 与 `src/lem_pipeline/sealevel.py` 仍保留旧方法，尚未统一接入当前四阶段。后续需结合数据2其余活动、数据3和数据5完成其余输入、汇聚模块接入及新一轮终态验证；旧管线结果不作为本次输入方案的端到端结果。
+当前实现衔接：四个独立初始输入阶段与汇聚带抬升子管线已验收，阶段2和3读取选定的mask及海域标签，阶段4提供海平面查询和连续区间截取接口。旧 `experiments/lem_pipeline/sample.py` 与 `experiments/lem_pipeline/sealevel.py` 仍保留旧方法，尚未统一接入当前四阶段。后续需结合数据2其余活动、数据3和数据5完成其余输入、汇聚模块接入及新一轮终态验证；旧管线结果不作为本次输入方案的端到端结果。
 
 <a id="convergent-uplift-events"></a>
 
 ##### 已验收的汇聚带抬升事件子管线（2026-09-17）
 
-yZz于2026-09-17确认汇聚带抬升工作完成，并要求写入项目文档。验收覆盖独立输入子管线，入口与方法见 [汇聚模块](../pipline/convergent_uplift/README.md)，归属与原话见 [本轮来源](sources.md#convergent-closeout-20260917)。
+yZz于2026-09-17确认汇聚带抬升工作完成，并要求写入项目文档。验收覆盖独立输入子管线，入口与方法见 [汇聚模块](../data_generation/stage/convergent_uplift/README.md)，归属与原话见 [本轮来源](sources.md#convergent-closeout-20260917)。
 
 1. 一次成功触发创建一个完整独立事件。该事件拥有自己的完整尺度、辅助极值线、空间U场、作用位置、起止时间和连续生命周期；同一事件在不同时刻沿用已确定的参数，后续触发创建新事件。同一样本只共用固定的500×500 km数据域与初始台地底图。
 2. 完整尺度由G造山分区统计约束，抽样量为完整区域最小旋转外接矩形长边；辅助线允许随机弯曲、分段、分叉及重汇合。U参考分布、两侧不对称及下降曲线以用户选定的DS5为依据；宽度与头尾使用G几何统计。先生成完整物理尺度的参考场，再取局部窗口。
@@ -305,7 +305,7 @@ yZz于2026-09-17确认汇聚带抬升工作完成，并要求写入项目文档�
 
 #### 4.1.6 执行约束、检验与数据来源
 
-- 测试阶段 8 个独立样本并行，每个样本使用 1 核；单次完整时长不超过 3 分钟，Codex 折算为每样本 180 秒，含输入生成、演化、检测与保存（yZz 2026-09-07；折算与范围为 Codex 解释，未提出异议）。2026-09-09 yZz 更正：该上限只适用于测试阶段，原话“那是测试阶段，测试是为了看效果”；实际生成的用时预算与模拟时长未定。机器开放 8 核使用；不要求使用 `bench/fs_driver.py`（yZz 2026-09-08）。2026-09-09 yZz 决定实际生成的用时由每份样本抽定的模拟时长 T 与步长决定，T 数量级 5 至 30 Myr（归档消息 150）。
+- 测试阶段 8 个独立样本并行，每个样本使用 1 核；单次完整时长不超过 3 分钟，Codex 折算为每样本 180 秒，含输入生成、演化、检测与保存（yZz 2026-09-07；折算与范围为 Codex 解释，未提出异议）。2026-09-09 yZz 更正：该上限只适用于测试阶段，原话“那是测试阶段，测试是为了看效果”；实际生成的用时预算与模拟时长未定。机器开放 8 核使用；不要求使用 `experiments/fastscape_examples/fs_driver.py`（yZz 2026-09-08）。2026-09-09 yZz 决定实际生成的用时由每份样本抽定的模拟时长 T 与步长决定，T 数量级 5 至 30 Myr（归档消息 150）。
 - 检验对 T 时刻交付的输出执行，使用与生成器所依据的现实分布同类的统计量；对海洋模块在两种周边类型下的行为只增加一项最小判断：陆地有没有达到边界（yZz 2026-09-08）；2026-09-09 定为外围海洋带最小宽 10 km，T 时刻陆地触及则样本作废。
 - 时间步敏感性需要查明（yZz 2026-09-08），见 `validation-risk-status.md` 第 9.12 节。
 - 初始状态采用已验收的全域水下台地方案。后续出露、淹没和内部海域随高程、海平面及演化产生；保存与结束规则继续采用运行到T，见第4.1.4节。
@@ -489,3 +489,24 @@ L1 推理不接收 K、D 或其他 LEM 参数。采样器采用确定性过程�
 ### 14.3 跨硬件可复现性
 
 坐标寻址噪声可以固定随机输入。浮点执行后端、精度和算子实现仍可能造成跨硬件差异。当前策略不承诺跨硬件逐字节一致，分布式计算验证协议需要另行批准。
+
+<a id="repository-organization"></a>
+
+## 15. 代码组织与存储
+
+2026-09-18，yZz确认全仓代码结构与存储位置修复完成。此前目录定义、分类纠正和本次完成确认见 [来源记录](sources.md#structure-closeout-20260918)。
+
+| 路径 | 用途 |
+|---|---|
+| data_generation/stage | 当前分阶段开发的生成模块：掩膜、海域分配、初始海底、海平面、背景垂向运动与汇聚带 |
+| data_generation/pipeline | 后续完整集成实现；所需代码在集成时纳入该目录，运行须独立于stage中的源码和启动程序 |
+| experiments | 旧完整生成流程、早期Landlab实验和Fastscape演化、示例复现 |
+| viewer | 主线查看器主体、启动辅助与相关显示实验 |
+| training | 后续模型训练实现 |
+| tests | 集中保存软件测试、数值验证和性能测试，按对应功能分组 |
+| datasets | 项目根目录下的模型训练数据集，与references平级 |
+| references/data、references/paper、references/code | 外部参考数据及派生参考资料、论文与补充材料、外部参考实现及配套资料 |
+
+既有主题参考资料包保留来源关系，下载原件的对应路径及哈希见 [资料索引](../references/catalog.csv)。阶段生成产物、冻结副本及历史记录保留各自身份。
+
+结构修复的完成确认覆盖本节的工程组织。2026-09-18，yZz确认本轮两项工程任务均已完成，包含 [3D体素查看器合并](../current.md#t-012)，依据见 [完成确认](sources.md#viewer-closeout-20260918)。查看器在 `viewer/lem_viewer/` 内整合Python界面与复用的C++体素核心，通过原BAT入口提供二维地图、三维表面及三维体素显示，具体使用和构建说明见 [viewer/README.md](../viewer/README.md)。完整数据生成方法、LEM联调、训练与推理验证按前述各节分别判断。

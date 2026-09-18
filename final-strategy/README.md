@@ -2,7 +2,7 @@
 
 状态：权威
 
-修订日期：2026-09-17
+修订日期：2026-09-18
 
 本目录是项目完整、最高标准的最终策略，面向 yZz、31415 和未来参与者。它取代根目录旧的单文件策略正文。根目录 `final-strategy.md` 在迁移期间只提供入口指针。
 
@@ -38,6 +38,8 @@
 12. E0 至 E4 是当前批准的验证顺序。所有实验仍需要执行授权。
 13. LEM 工具性能已在 1 km 网格实测（2026-09-03）：fastscapelib-fortran 每步 70 ms，Landlab 三种配置 1988 至 9895 ms。工具实现差异、fastscape 单流向例程的洼地抬升和 Python 层不可用见 `validation-risk-status.md` 第 9.4、9.9、9.10 节。
 14. 数据生成以 fastscape 线为主要管线，Landlab 用于对照与能力核对（2026-09-03 确定，见 `validation-risk-status.md` 第 4.3 节）。
+
+15. 2026-09-18，yZz确认全仓代码结构与存储位置修复、3D体素查看器合并两项工程任务均已完成。当前代码与资料组织见 [架构第15节](architecture-dataflow.md#repository-organization)，任务状态见 [T-011](../current.md#t-011)、[T-012](../current.md#t-012)，完成依据见 [本轮确认](sources.md#viewer-closeout-20260918)。
 
 ## 台账关系
 

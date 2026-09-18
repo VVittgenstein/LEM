@@ -8,8 +8,9 @@
 | `current.md` | 根目录下的当前 TODO 与阶段性进展记录。它与 `final-strategy/` 共同组成台账。 |
 | `project-rules/` | 审批、策略编写、current 编写、证据归属和 Git 发布规则。 |
 | `docs/` | 历史记录、分析和工程文档。历史记录用于取证，不自动构成当前策略。 |
-| `references/` | 本地参考材料。 |
-| `datasets/` | 数据获取会话下载的原始数据集与派生栅格，2026-09-09 由仓库外 `F:\LEM-datasets` 移入；旧路径保留为指向该目录的目录联接。文件哈希见各会话 `docs/work/*/manifest.json`；目录在 `.gitignore` 中排除。 |
+| `references/` | 本地参考资料。`data/` 保存参考数据，`paper/` 保存论文及补充材料，`code/` 保存外部参考实现；来源和迁移对应关系见 `references/catalog.json`。已有主题资料包保留各自来源记录。 |
+| `datasets/` | 模型训练用数据集，直接位于项目根目录，与 `references/` 平级。数据内容按 `.gitignore` 排除，用途说明保留。 |
+| `experiments/` | 旧版生成流程、早期 Landlab 实验和 Fastscape 演化、示例复现程序；相关测试位于 `tests/experiments/`。 |
 | `final-strategy.md` | 迁移期间的临时指针，不包含权威策略正文。 |
 
 ## 公开范围

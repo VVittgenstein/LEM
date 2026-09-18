@@ -24,8 +24,21 @@ zarr = ["zarr>=2.16"]
 [project.scripts]
 lem-viewer = "lem_viewer.main:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+packages = [
+    "lem_viewer", "lem_viewer.channels", "lem_viewer.loaders",
+    "lem_viewer.ui", "lem_viewer.views", "lem_viewer.voxel", "lem_pipeline",
+]
+
+[tool.setuptools.package-dir]
+lem_viewer = "viewer/lem_viewer"
+lem_pipeline = "experiments/lem_pipeline"
+
+[tool.setuptools.package-data]
+lem_viewer = ["voxel/*.md", "voxel/*.txt", "voxel/native/*.cpp", "voxel/native/*.h", "voxel/native/*.md", "voxel/native/CMakeLists.txt", "voxel/native/core/*.cpp", "voxel/native/core/*.h"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# The full suite uses tests/run.py to select each group's Python environment.
+testpaths = ["tests/viewer"]
+pythonpath = ["viewer", "experiments"]
+addopts = "--import-mode=importlib"

@@ -9,10 +9,10 @@ setlocal EnableExtensions
 
 set "REPO_ROOT=%~dp0"
 if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
-set "LAUNCHER=%REPO_ROOT%\scripts\launch_terrain_viewer.pyw"
+set "LAUNCHER=%REPO_ROOT%\viewer\scripts\launch_terrain_viewer.pyw"
 set "WINDOWS_ENV=%REPO_ROOT%\lem-env-win"
 set "WINDOWS_PYTHON=%WINDOWS_ENV%\Scripts\python.exe"
-set "PYTHONPATH=%REPO_ROOT%\src;%PYTHONPATH%"
+set "PYTHONPATH=%REPO_ROOT%\viewer;%PYTHONPATH%"
 set "EXITCODE=0"
 
 if not exist "%LAUNCHER%" (

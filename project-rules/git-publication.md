@@ -49,17 +49,42 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `final-strategy.md`
 - `final-strategy/`
 - `project-rules/`
-- `scripts/`
-- `src/`
-- `tests/`
-- `bench/`，包括已批准公开的脚本、日志与文本结果；生成数组、图片和存储目录按 `.gitignore` 排除。
-- `pipline/mask_generator/`
-- `pipline/seafloor_generator/`
-- `pipline/initial_bathymetry/`
-- `pipline/sea_level/`
-- `pipline/convergent_uplift/`
+- `viewer/`
+- `data_generation/README.md`
+- `data_generation/pipeline/README.md`
+- `training/README.md`
+- `tests/__init__.py`
+- `tests/README.md`
+- `tests/run.py`
+- `tests/suites.json`
+- `tests/viewer/`
+- `tests/benchmarks/`
+- `tests/data_generation/__init__.py`
+- `tests/data_generation/stage/__init__.py`
+- `bench/results/`
+- `data_generation/stage/mask_generator/`
+- `tests/data_generation/stage/mask_generator/`
+- `data_generation/stage/seafloor_generator/`
+- `tests/data_generation/stage/seafloor_generator/`
+- `data_generation/stage/initial_bathymetry/`
+- `tests/data_generation/stage/initial_bathymetry/`
+- `data_generation/stage/sea_level/`
+- `tests/data_generation/stage/sea_level/`
+- `data_generation/stage/convergent_uplift/`
+- `tests/data_generation/stage/convergent_uplift/`
+- `experiments/lem_pipeline/`
+- `tests/experiments/lem_pipeline/`
+- `experiments/landlab_experiments/`
+- `experiments/fastscape_examples/`
+- `experiments/README.md`
+- `tests/experiments/__init__.py`
+- `datasets/README.md`
 
-`docs/`（包括历史会话、旧计划、研究过程与运行记录）和 `references/` 保留在 `private`。`datasets/`、`output/`、环境与缓存按 `.gitignore` 排除。公开文件中对本地材料的路径引用只保留来源定位，不使被引用的文件进入公开范围；这些引用在公开副本中可能无法访问。用户原话与来源定位保持原文。
+2026-09-18，按本轮已获执行授权的目录迁移方案，将原公开代码及对应测试映射到上述新位置，并纳入配套的目录说明与集中测试入口。原始历史路径在前文事件记录中保留。本地背景垂向运动源码及其测试继续排除，冻结资源、模型包和生成产物延续既有边界。本轮没有执行 Git 提交或远端发布。迁移依据与核查记录见 `docs/work/2026-09-18-directory-migration/`。
+
+`docs/`（包括历史会话、旧计划、研究过程与运行记录）和 `references/` 保留在 `private`。`datasets/` 的训练数据内容、`output/`、环境与缓存按 `.gitignore` 排除；`datasets/README.md` 作为用途说明公开。参考资料分类修正后，原先已忽略的获取原件在 `references/data`、`references/paper`、`references/code` 中维持忽略状态，来源目录与索引继续保留在 private。公开文件中对本地材料的路径引用只保留来源定位，不使被引用的文件进入公开范围；这些引用在公开副本中可能无法访问。用户原话与来源定位保持原文。
+
+2026-09-18，按用户随后明确的分类纠正，将三组旧流程与实验移至 `experiments`，相应测试移至 `tests/experiments`。`datasets` 专用于训练数据；外部参考原件归入 `references` 的分类目录。本次修正没有执行提交或推送。
 
 新增公开文件、公开文案或扩大范围需要 yZz 明确批准。
 

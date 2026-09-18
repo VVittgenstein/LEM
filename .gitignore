@@ -37,5 +37,6 @@ bench/results/**/*.npy
 bench/results/**/*.zarr/
 bench/results/**/*.png
 
-# Downloaded datasets and derived rasters (hashes recorded in docs/work/*/manifest.json); F:\LEM-datasets is a junction to this folder
-datasets/
+# Model-training data; the directory purpose is documented in version control.
+datasets/*
+!datasets/README.md

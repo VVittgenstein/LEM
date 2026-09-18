@@ -1,0 +1,216 @@
+{
+  "interpreters": {
+    "viewer": "lem-env-win/Scripts/python.exe",
+    "compute": "lem-env/python.exe",
+    "stages": "docs/work/2026-09-08-q1-data/D-landform-statistics/.venv/Scripts/python.exe"
+  },
+  "pytest_support": "lem-env-win/Lib/site-packages",
+  "suites": {
+    "viewer": {
+      "kind": "pytest",
+      "environment": "viewer",
+      "paths": [
+        "viewer"
+      ],
+      "args": [
+        "tests/viewer"
+      ],
+      "default": true,
+      "description": "Viewer regression"
+    },
+    "viewer_native": {
+      "kind": "script",
+      "environment": "viewer",
+      "paths": ["viewer"],
+      "script": "tests/viewer/check_native_gui.py",
+      "default": false,
+      "description": "Native voxel embedding, input, scale and lifecycle (requires desktop and built backend)"
+    },
+    "legacy": {
+      "kind": "pytest",
+      "environment": "compute",
+      "paths": [
+        "experiments",
+        "viewer"
+      ],
+      "args": [
+        "tests/experiments/lem_pipeline/test_pipeline_basic.py"
+      ],
+      "default": true,
+      "description": "Existing generator regression"
+    },
+    "mask": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/mask_generator",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/mask_generator",
+      "default": true,
+      "description": "mask_generator",
+      "modules": [
+        "test_geometry",
+        "test_numerics",
+        "test_report"
+      ]
+    },
+    "seafloor": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/seafloor_generator",
+        "data_generation/stage/mask_generator",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/seafloor_generator",
+      "default": true,
+      "description": "seafloor_generator"
+    },
+    "bathymetry": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/initial_bathymetry",
+        "data_generation/stage/seafloor_generator",
+        "data_generation/stage/mask_generator",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/initial_bathymetry",
+      "default": true,
+      "description": "initial_bathymetry"
+    },
+    "sea_level": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/sea_level",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/sea_level",
+      "default": true,
+      "description": "sea_level"
+    },
+    "background": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/background_uplif",
+        "data_generation/stage/mask_generator",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/background_uplif",
+      "default": true,
+      "description": "background_uplif"
+    },
+    "convergence_axis": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/convergent_uplift",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/convergent_uplift",
+      "default": true,
+      "description": "convergent_uplift",
+      "pattern": "test_pipeline.py"
+    },
+    "convergence_field": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/convergent_uplift/field_pipeline",
+        "data_generation/stage/convergent_uplift",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/convergent_uplift/field_pipeline",
+      "default": true,
+      "description": "convergent_uplift/field_pipeline",
+      "pattern": "test_fields.py"
+    },
+    "convergence_window": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/convergent_uplift/window_pipeline",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/convergent_uplift/window_pipeline",
+      "default": true,
+      "description": "convergent_uplift/window_pipeline",
+      "pattern": "test_windows.py"
+    },
+    "convergence_time": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/convergent_uplift/time_pipeline",
+        "viewer"
+      ],
+      "test_dir": "tests/data_generation/stage/convergent_uplift/time_pipeline",
+      "default": true,
+      "description": "convergent_uplift/time_pipeline",
+      "pattern": "test_time.py"
+    },
+    "mask_world": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/mask_generator"
+      ],
+      "test_dir": "tests/data_generation/stage/mask_generator/world_orogen",
+      "default": true,
+      "description": "world_orogen"
+    },
+    "mask_gibbs": {
+      "kind": "unittest",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/mask_generator"
+      ],
+      "test_dir": "tests/data_generation/stage/mask_generator/world_orogen_gibbs",
+      "default": true,
+      "description": "world_orogen_gibbs"
+    },
+    "time_api": {
+      "kind": "script",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/convergent_uplift/time_pipeline"
+      ],
+      "script": "tests/data_generation/stage/convergent_uplift/time_pipeline/test_api.py",
+      "default": false,
+      "description": "Saved event data API regression"
+    },
+    "mask_probability": {
+      "kind": "script",
+      "environment": "stages",
+      "paths": [
+        "data_generation/stage/mask_generator"
+      ],
+      "script": "tests/data_generation/stage/mask_generator/research/selection_model_check.py",
+      "default": false,
+      "description": "Exact small-state probability research check"
+    },
+    "benchmarks": {
+      "kind": "script",
+      "environment": "compute",
+      "paths": [],
+      "script": "tests/benchmarks/run_matrix.py",
+      "default": false,
+      "description": "Explicit performance matrix; provide --steps"
+    },
+    "timestep": {
+      "kind": "script",
+      "environment": "compute",
+      "paths": [
+        ".",
+        "experiments",
+        "tests/experiments/lem_pipeline/experiments"
+      ],
+      "script": "tests/experiments/lem_pipeline/experiments/pipeline_timestep_test.py",
+      "default": false,
+      "description": "Explicit numerical experiment; provide run/analyze arguments"
+    }
+  }
+}

@@ -72,25 +72,25 @@ class TestControlPanel:
         panel = ControlPanel()
         panel.set_channels(["elevation", "slope", "hillshade"])
         assert panel.primary_channel == "elevation"
-        assert panel.secondary_channel == "elevation"
+        assert panel.state().channel == "elevation"
 
-    def test_compare_mode_default_off(self, qapp):
+    def test_edits_first_slot_by_default(self, qapp):
         from lem_viewer.ui.control_panel import ControlPanel
 
         panel = ControlPanel()
-        assert not panel.compare_mode
+        assert panel._slot_combo.currentIndex() == 0
 
-    def test_compare_toggle_enables_secondary(self, qapp):
+    def test_slot_state_restores_independent_channel(self, qapp):
         from lem_viewer.ui.control_panel import ControlPanel
 
         panel = ControlPanel()
-        assert not panel._secondary_combo.isEnabled()
-        panel._compare_check.setChecked(True)
-        assert panel.compare_mode
-        assert panel._secondary_combo.isEnabled()
-        panel._compare_check.setChecked(False)
-        assert not panel.compare_mode
-        assert not panel._secondary_combo.isEnabled()
+        from lem_viewer.ui.view_state import ViewState
+        panel.set_channels(["elevation", "slope"])
+        panel.set_state(ViewState(mode="map_2d", channel="slope", levels=8), 1)
+        assert panel._slot_combo.currentIndex() == 1
+        assert panel.primary_channel == "slope"
+        assert panel.view_mode == "map_2d"
+        assert panel.levels == 8
 
     def test_display_size_default(self, qapp):
         from lem_viewer.ui.control_panel import ControlPanel
@@ -98,14 +98,14 @@ class TestControlPanel:
         panel = ControlPanel()
         assert panel.max_display_size == 512
 
-    def test_compare_signal_emitted(self, qapp):
+    def test_slot_selection_signal_emitted(self, qapp):
         from lem_viewer.ui.control_panel import ControlPanel
 
         panel = ControlPanel()
-        received: list[bool] = []
-        panel.compare_toggled.connect(received.append)
-        panel._compare_check.setChecked(True)
-        assert received == [True]
+        received: list[int] = []
+        panel.slot_changed.connect(received.append)
+        panel._slot_combo.setCurrentIndex(1)
+        assert received == [1]
 
 
 # -- MainWindow (Qt layout, GL failures handled gracefully) --------
@@ -122,7 +122,8 @@ class TestMainWindow:
         from lem_viewer.ui.main_window import MainWindow
 
         window = MainWindow()
-        assert not window.compare_mode
+        assert window.compare_mode
+        assert len(window._slots) == 2
 
     def test_set_dataset_populates_channels(self, qapp):
         from lem_viewer.ui.main_window import MainWindow
@@ -133,18 +134,22 @@ class TestMainWindow:
         assert window._dataset is ds
         assert window.primary_channel == "elevation"
 
-    def test_compare_state_tracking(self, qapp):
+    def test_two_slots_keep_independent_view_and_channel(self, qapp):
         from lem_viewer.ui.main_window import MainWindow
 
         window = MainWindow()
         ds = _make_dataset()
         window.set_dataset(ds)
 
-        window._control_panel._compare_check.setChecked(True)
-        assert window.compare_mode
-
-        window._control_panel._compare_check.setChecked(False)
-        assert not window.compare_mode
+        window.select_slot(1)
+        window._control_panel._channel_combo.setCurrentText("slope")
+        assert window.secondary_channel == "slope"
+        assert window.primary_channel == "elevation"
+        window._control_panel.set_view_mode("surface_3d")
+        assert all(s.state.mode == "surface_3d" for s in window._slots)
+        window.select_slot(0)
+        assert window._control_panel.primary_channel == "elevation"
+        window.close()
 
     def test_max_display_size_property(self, qapp):
         from lem_viewer.ui.main_window import MainWindow

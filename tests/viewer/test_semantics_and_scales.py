@@ -208,4 +208,4 @@ class TestNewViews:
         assert window._control_panel.view_mode == "map_2d"
         assert isinstance(window._current_view, Map2DWidget)
         assert window._control_panel.palette == "fem" and window._control_panel.levels == 12
-        assert window._control_panel.vertical_exaggeration is None
+        assert window._control_panel.vertical_exaggeration == 1.0
