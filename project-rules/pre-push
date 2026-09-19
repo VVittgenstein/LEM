@@ -31,8 +31,18 @@ do
     reject "public-paths.txt is missing from the public commit."
   [ -n "$allowlist" ] || reject "the public path list is empty."
 
+  historical=$(git show "$local_oid:project-rules/public-history-commits.txt" 2>/dev/null || true)
   for commit in $commits
   do
+    commit_allowlist="$allowlist"
+    for historical_commit in $historical
+    do
+      if [ "$commit" = "$historical_commit" ]; then
+        commit_allowlist=$(git show "$commit:project-rules/public-paths.txt") ||
+          reject "approved historical commit has no public path list."
+        [ -n "$commit_allowlist" ] || reject "historical public path list is empty."
+      fi
+    done
     paths=$(git -c core.quotePath=false ls-tree -r --name-only "$commit") ||
       reject "cannot inspect the file tree of $commit."
     rejected=$(printf '%s\n' "$paths" | while IFS= read -r path
@@ -46,7 +56,7 @@ do
           *) [ "$path" = "$rule" ] && allowed=1 ;;
         esac
       done <<EOF
-$allowlist
+$commit_allowlist
 EOF
       [ "$allowed" = 1 ] || printf '%s\n' "$path"
     done)

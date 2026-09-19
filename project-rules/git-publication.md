@@ -114,3 +114,14 @@ remote.origin.push = refs/heads/public:refs/heads/main
 ## 6. 提交身份
 
 提交沿用仓库现有的 yZz 身份。不得添加 Agent 共同作者、Agent 提交作者或 Contributors 署名。
+
+## 7. 既有公开贡献历史
+
+为保留31415在体素查看器中的真实提交作者记录，允许将 `origin/litho-3d-and-map-viewer` 的下列两个既有公开提交历史并入public：
+
+- `4888087d32b56eba2d3490090d50567ba83fd668`
+- `748f24f63820309ae89e319a0722372a325fc8f3`
+
+该项使用以现有public和上述公开分支为父提交的合并记录，当前程序源码保持。通过普通快进推送更新origin/main，不修改既有提交作者、时间或已发布提交，不引入private独有历史。
+
+这两条完整提交号保存在 `project-rules/public-history-commits.txt`。pre-push仍逐条检查待发布提交的完整文件树；仅这两条不可变历史提交按其自身保存的公开路径清单核验，其他提交继续按待推送public版本的当前清单核验。该例外不允许在当前文件树恢复旧目录，也不得自动追加其他历史提交。
