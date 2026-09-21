@@ -1,0 +1,9 @@
+[
+  {"source_id":"N01","url":"https://datapub.gfz.de/download/10.5880.WSM.2025.001-Scbwez/","path":"sources/new/N01/file_index.html"},
+  {"source_id":"N02","url":"https://api.github.com/repos/LukeWedmore/malawi_seismogenic_source_model/git/trees/e3de374e2657c88506f5d01b011185ac08dc2c84?recursive=1","path":"sources/new/N02/tree.json"},
+  {"source_id":"N02","url":"https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/README.md","path":"sources/new/N02/README.md"},
+  {"source_id":"N02","url":"https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/LICENSE.txt","path":"sources/new/N02/LICENSE.txt"},
+  {"source_id":"N03","url":"https://ndownloader.figshare.com/files/42183453","path":"sources/new/N03/fault_statistics.zip","expected_md5":"c4f9bcd90724df4deee58d13e8410f9b"},
+  {"source_id":"N03","url":"https://ndownloader.figshare.com/files/42183561","path":"sources/new/N03/scripts.zip","expected_md5":"0e13f9965ac4b398ccf9ebda235b412e"},
+  {"source_id":"N03","url":"https://ndownloader.figshare.com/files/42183447","path":"sources/new/N03/supplement.pdf","expected_md5":"1db70297b28e9a99fb5df0dec22e2379"}
+]

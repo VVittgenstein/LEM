@@ -36,6 +36,8 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 2026-09-17，yZz确认汇聚带抬升工作完成，明确要求更新current与项目文档、按项目规则提交并推送至现有Main。该指示覆盖 `pipline/convergent_uplift/` 的源码、源内设计配置、测试与说明，以及本轮台账、策略和发布范围更新。模块原始资料、拟合参数包、数组、图像、检查产物与运行清单按生成产物规则排除；背景场、其他活动及无关工作不纳入本次新增公开范围。来源见 `docs/work/2026-09-17-convergent-uplift-closeout/decisions.md` U1。远端实际分支名为main，沿用public到origin/main的映射。
 
+2026-09-21，yZz要求更新本轮裂谷工作的current和项目文档，按Git规则提交并推送。此次公开范围为裂谷生成、拟合、资料获取及核验源码，配置、专用检查、显示程序和当前使用说明，按下列具体文件与子目录列入清单。研究过程报告、Notebook、会话归档及导出器副本保留private；原件、参数包、数组、图像和运行产物按忽略规则排除。来源见`docs/work/2026-09-21-rifting-publication/decisions.md` U5。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录。当前清单为：
 
 - `.gitattributes`
@@ -72,6 +74,32 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `tests/data_generation/stage/sea_level/`
 - `data_generation/stage/convergent_uplift/`
 - `tests/data_generation/stage/convergent_uplift/`
+- `data_generation/stage/rifting/.gitignore`
+- `data_generation/stage/rifting/README.md`
+- `data_generation/stage/rifting/IMPLEMENTATION.md`
+- `data_generation/stage/rifting/VISUALIZATION_SPEC.md`
+- `data_generation/stage/rifting/open_gallery.ps1`
+- `data_generation/stage/rifting/run_generation.ps1`
+- `data_generation/stage/rifting/run.ps1`
+- `data_generation/stage/rifting/acquisition-1.json`
+- `data_generation/stage/rifting/acquisition-2.json`
+- `data_generation/stage/rifting/acquisition-3.json`
+- `data_generation/stage/rifting/acquisition-4.json`
+- `data_generation/stage/rifting/acquisition-5.json`
+- `data_generation/stage/rifting/acquisition-6.json`
+- `data_generation/stage/rifting/engine/`
+- `data_generation/stage/rifting/reporting/`
+- `data_generation/stage/rifting/checks/`
+- `data_generation/stage/rifting/scripts/acquire.py`
+- `data_generation/stage/rifting/scripts/build_delivery.py`
+- `data_generation/stage/rifting/scripts/extract_web_text.py`
+- `data_generation/stage/rifting/scripts/method_checks.py`
+- `data_generation/stage/rifting/scripts/prepare_local.py`
+- `data_generation/stage/rifting/scripts/profile_magnitudes.py`
+- `data_generation/stage/rifting/scripts/profile_sources.py`
+- `data_generation/stage/rifting/scripts/quality_checks.py`
+- `data_generation/stage/rifting/scripts/verify_delivery.py`
+- `data_generation/stage/rifting/scripts/workspace.py`
 - `experiments/lem_pipeline/`
 - `tests/experiments/lem_pipeline/`
 - `experiments/landlab_experiments/`

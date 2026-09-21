@@ -1,0 +1,14 @@
+[
+  {"source_id":"N01","url":"https://www.world-stress-map.org/download","path":"sources/new/N01/download.html"},
+  {"source_id":"N01","url":"https://doi.org/10.5880/WSM.2025.001","path":"sources/new/N01/release.html"},
+  {"source_id":"N01","url":"https://www.world-stress-map.org/fileadmin/wsm/pdfs/WSM_TR_25_01.pdf","path":"sources/new/N01/WSM_TR_25_01.pdf"},
+  {"source_id":"N02","url":"https://api.github.com/repos/LukeWedmore/malawi_seismogenic_source_model/commits?per_page=1","path":"sources/new/N02/commit.json"},
+  {"source_id":"N02","url":"https://api.github.com/repos/LukeWedmore/malawi_seismogenic_source_model/contents/","path":"sources/new/N02/contents.json"},
+  {"source_id":"N02","url":"https://nhess.copernicus.org/articles/22/3607/2022/","path":"sources/new/N02/article.html"},
+  {"source_id":"N03","url":"https://api.figshare.com/v2/articles/23576616","path":"sources/new/N03/figshare.json"},
+  {"source_id":"N03","url":"https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2022TC007659","path":"sources/new/N03/article.html"},
+  {"source_id":"N04","url":"https://se.copernicus.org/articles/10/1063/2019/","path":"sources/new/N04/article.html"},
+  {"source_id":"N05","url":"https://solidmechanics.org/Text/Chapter5_1/Chapter5_1.htm","path":"sources/new/N05/chapter5_1.html"},
+  {"source_id":"N06","url":"https://www.usgs.gov/publications/vertical-deformation-associated-normal-fault-systems-evolved-over-coseismic","path":"sources/new/N06/usgs_record.html"},
+  {"source_id":"N07","url":"https://se.copernicus.org/articles/10/1141/2019/","path":"sources/new/N07/article.html"}
+]

@@ -21,7 +21,9 @@
 
 2026-09-17，yZz确认 **数据2中的汇聚带抬升子管线已完成并验收**。每次触发创建完整独立事件，空间形态、作用位置、强度场和连续生命周期一起确定。已交付8个数据域的13个独立事件及各自A至E图，包含97个时刻画面。入口为 [convergent_uplift](data_generation/stage/convergent_uplift/README.md)，时间与事件入口为 `data_generation/stage/convergent_uplift/run_time.ps1`；接口提供m/yr速率与m累计位移。案例代理和设计参数的依据身份随模块说明保留。
 
-下一范围为数据2其余活动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+2026-09-21，数据2中的[裂谷首版](data_generation/stage/rifting/README.md)已实现大、小尺度作用生成、时变应力、条件断层与构造U计算。当前检查样本包含16条断层、243个同步时刻及七类视图；小尺度应力采用零值留白和自身量级的跨时间固定色标。代码一致性检查已执行，网格收敛、周界处理和长期地学校准仍有待验证。具体流程与依据见 [裂谷生成规则](final-strategy/architecture-dataflow.md#rifting-spacetime)。
+
+后续继续推进裂谷验证、数据2其他活动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
 
 The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. The convergent-uplift input pipeline was accepted on 2026-09-17. Each trigger creates an independent event with its own spatial field, placement and lifecycle. The delivered batch contains 13 events across eight domains. Remaining activity types, other input classes, LEM integration and end-state validation continue separately.
 
@@ -113,7 +115,8 @@ loop work before doing heavier feature engineering.
 
 ```text
 data_generation/
-  stage/                    当前六个数据生成阶段
+  stage/                    当前分阶段数据生成模块
+    rifting/                裂谷时变作用、断层和构造U首版
   pipeline/                 后续完整集成实现的预留目录
 experiments/                旧完整流程、Landlab 实验与 Fastscape 示例
 references/                 外部参考资料及来源索引

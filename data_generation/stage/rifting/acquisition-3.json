@@ -1,0 +1,27 @@
+[
+  {
+    "source_id": "N01",
+    "url": "https://datapub.gfz.de/download/10.5880.WSM.2025.001-Scbwez/WSM_Database_2025.csv",
+    "path": "sources/new/N01/WSM_Database_2025.csv"
+  },
+  {
+    "source_id": "N02",
+    "url": "https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/GIS_vector_source_files/faults/geojson/MSSM_faults.geojson",
+    "path": "sources/new/N02/MSSM_faults.geojson"
+  },
+  {
+    "source_id": "N02",
+    "url": "https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/GIS_vector_source_files/sections/geojson/MSSM_sections.geojson",
+    "path": "sources/new/N02/MSSM_sections.geojson"
+  },
+  {
+    "source_id": "N02",
+    "url": "https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/GIS_vector_source_files/multifaults/geojson/MSSM_multifaults.geojson",
+    "path": "sources/new/N02/MSSM_multifaults.geojson"
+  },
+  {
+    "source_id": "N02",
+    "url": "https://raw.githubusercontent.com/LukeWedmore/malawi_seismogenic_source_model/e3de374e2657c88506f5d01b011185ac08dc2c84/fault_source_geometry/20220929_MSSM_source_geometry.csv",
+    "path": "sources/new/N02/20220929_MSSM_source_geometry.csv"
+  }
+]

@@ -1,0 +1,5 @@
+output/
+sources/
+__pycache__/
+.cache/
+conversations/
