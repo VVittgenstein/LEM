@@ -5,6 +5,7 @@ from collections import defaultdict
 import numpy as np
 from scipy import stats,optimize
 from .common import ROOT,OUT,save
+from .numerical_profile import apply_profile
 
 def rows(path):
     with path.open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
@@ -73,6 +74,7 @@ def main():
         limits=['Force counts, source positions, local scales, recurrence, probability transfer and constitutive response are explicit design assumptions.',
                 'Modern direction and magnitude evidence is not a measured 48 Myr force history.',
                 'No observed valley depth or sediment thickness is fitted as U.'])
+    apply_profile(model)
     save(OUT/'models.json',model)
     print('Fitted reviewed length/slip/orientation variables; saved proxy and design identities.',flush=True)
     return model

@@ -2,7 +2,8 @@ param(
     [ValidateSet('all','generate','products','render','diagnostics','review','tests','verify','gallery')][string]$Stage='verify',
     [int]$Seed=1001,
     [int]$Workers=6,
-    [string]$Python='F:\LEM\lem-env\python.exe'
+    [string]$Python='F:\LEM\lem-env\python.exe',
+    [string]$OutputDirectory=''
 )
 $ErrorActionPreference='Stop'
 $env:PYTHONDONTWRITEBYTECODE='1'
@@ -11,6 +12,11 @@ $env:OPENBLAS_NUM_THREADS='1'
 $env:OMP_NUM_THREADS='1'
 $env:RIFTING_TEST_SEED="$Seed"
 $env:MPLCONFIGDIR=Join-Path $PSScriptRoot 'output\matplotlib-cache'
+$previousRiftingOutput=$env:RIFTING_OUTPUT_DIRECTORY
+if ($OutputDirectory) {
+    if (-not [IO.Path]::IsPathRooted($OutputDirectory)) { $OutputDirectory=Join-Path $PSScriptRoot $OutputDirectory }
+    $env:RIFTING_OUTPUT_DIRECTORY=[IO.Path]::GetFullPath($OutputDirectory)
+}
 function Invoke-StagePython([string[]]$Arguments) {
     & $Python -B @Arguments
     if ($LASTEXITCODE -ne 0) { throw ('Stage failed: '+($Arguments -join ' ')) }
@@ -31,4 +37,4 @@ try {
     if ($Stage -in @('all','tests')) { Invoke-StagePython @('-m','unittest','discover','-s','checks','-v') }
     if ($Stage -in @('all','verify')) { Invoke-StagePython @('-m','engine.verify','--seed',"$Seed") }
     if ($Stage -eq 'gallery') { & (Join-Path $PSScriptRoot 'open_gallery.ps1') -Seed $Seed }
-} finally { Pop-Location }
+} finally { Pop-Location; $env:RIFTING_OUTPUT_DIRECTORY=$previousRiftingOutput }

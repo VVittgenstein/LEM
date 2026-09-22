@@ -4,7 +4,9 @@ from pathlib import Path
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'output'/'generation_v1'
+OUT=Path(os.environ.get('RIFTING_OUTPUT_DIRECTORY', ROOT/'output'/'generation_v1')).resolve()
+if not OUT.is_relative_to((ROOT/'output').resolve()):
+    raise ValueError('Rifting output must remain inside this module output directory')
 END=48.0
 
 def save(path,obj):

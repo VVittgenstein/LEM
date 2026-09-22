@@ -96,7 +96,8 @@ def review(seed=1001):
         largest_slip_length_ratio=max([f['small_strain_diagnostic'] for f in run.faults]+[0]),
         instantaneous_U_mm_per_year=[min(r['U_min_mm_per_year'] for r in metrics),max(r['U_max_mm_per_year'] for r in metrics)],
         present_displacement_m=[float(displacement.min()),float(displacement.max())],
-        numerical_status='mesh sensitivity remains; no converged-accuracy claim',geological_status='explicit regional/proxy/design model; long-term calibration pending',
+        numerical_status=run.model.get('numerical_profile', {}).get('status', 'archived initial mesh; no converged-accuracy claim'),
+        geological_status='statistical constraints and explicit design assumptions accepted for this module',
         LEM_status='standalone input-generation research run; no erosion or sedimentation executed')
     save(dest/'sample_summary.json',summary)
     print('Saved review tables, pair histories and point histories.',flush=True)

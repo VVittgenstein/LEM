@@ -41,7 +41,8 @@ def run_diagnostics(seed=1001):
     response_rows=[];response_samples={};length=500+2*p['response_buffer_km'];response_origin=origin-p['response_buffer_km']
     grid=np.arange(12.5,500,25);rx,ry=np.meshgrid(grid+p['response_buffer_km'],grid+p['response_buffer_km'])
     production_h=length/(p['response_nodes']-1);fixed_width=p['response_regularization_width_km']
-    for n in [33,41,49]:
+    response_reference=p['response_nodes'];response_meshes=[response_reference-8,response_reference,response_reference+8]
+    for n in response_meshes:
         begin=time.perf_counter();box=ElasticBox(length,n,p['response_depth_layers'],p['reference_thickness_km'],p['elastic_young_GPa']*1e9,p['elastic_poisson'],support_bottom=True)
         fields=[]
         for i in selected:
@@ -55,7 +56,8 @@ def run_diagnostics(seed=1001):
         response_rows.append(dict(nodes_per_side=n,horizontal_spacing_km=length/(n-1),wall_seconds=time.perf_counter()-begin))
         del box
     for row in response_rows:
-        n=row['nodes_per_side'];row['per_fault_relative_l2_vs_41']={run.faults[i]['id']:relative_l2(response_samples[n][j],response_samples[41][j]) for j,i in enumerate(selected)}
+        n=row['nodes_per_side'];row['reference_nodes']=response_reference
+        row['per_fault_relative_l2_vs_reference']={run.faults[i]['id']:relative_l2(response_samples[n][j],response_samples[response_reference][j]) for j,i in enumerate(selected)}
     result=dict(identity='diagnostic comparison; no acceptance tolerance or asymptotic convergence claim',
         fixed_quantities=['physical box dimensions','source contacts and directions','reference force in N','elastic properties','stress diagnostic depth','fault reference geometry and slip','30 km regularization width and production patch extent','basal reference'],
         stress_meshes=comparisons,stress_history=stress_history,response_meshes=response_rows,
@@ -68,8 +70,8 @@ def run_diagnostics(seed=1001):
     for n in [stress_meshes[0],stress_meshes[-1]]:axes[0].plot(times,[r[str(n)]*100 for r in stress_history],'-o',label=f'{run.length/(n-1):g} km')
     axes[0].set(xlabel='模拟时间 / Myr',ylabel=f'相对当前{run.length/(base_stress-1):g} km网格的张量L2差异 / %',title='固定物理作用与力值，比较应力求解网格');axes[0].legend()
     for j,i in enumerate(selected):
-        axes[1].plot([length/(n-1) for n in [33,41,49]],[relative_l2(response_samples[n][j],response_samples[41][j])*100 for n in [33,41,49]],'-o',label=run.faults[i]['id'])
-    axes[1].set(xlabel='响应求解格距 / km',ylabel='相对当前25 km网格的U响应L2差异 / %',title='保持源宽度30 km，比较三条断层');axes[1].legend()
+        axes[1].plot([length/(n-1) for n in response_meshes],[relative_l2(response_samples[n][j],response_samples[response_reference][j])*100 for n in response_meshes],'-o',label=run.faults[i]['id'])
+    axes[1].set(xlabel='响应求解格距 / km',ylabel=f'相对当前{length/(response_reference-1):g} km网格的U响应L2差异 / %',title='保持源宽度30 km，比较三条断层');axes[1].legend()
     fig.savefig(dest/'mesh_comparison.png',dpi=160);plt.close(fig)
     return result
 
