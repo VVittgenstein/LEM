@@ -38,6 +38,8 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 2026-09-21，yZz要求更新本轮裂谷工作的current和项目文档，按Git规则提交并推送。此次公开范围为裂谷生成、拟合、资料获取及核验源码，配置、专用检查、显示程序和当前使用说明，按下列具体文件与子目录列入清单。研究过程报告、Notebook、会话归档及导出器副本保留private；原件、参数包、数组、图像和运行产物按忽略规则排除。来源见`docs/work/2026-09-21-rifting-publication/decisions.md` U5。
 
+2026-09-28，yZz要求更新本轮沉降工作的current和项目文档，阅读Git规则后提交并推送。此次公开范围为沉降生成、参数拟合、窗口候选与选择、事件查询、显示和核查源码，专用测试及README、METHOD、SOURCES等必要说明，具体文件列于下方清单。WORK_LOG、会话归档、用户附件、归档适配器及发布过程记录保留private；原始资料副本、拟合包、数组、图像和缓存按忽略规则排除。现有无关修改保持。本轮原话与原始行定位见`docs/work/2026-09-28-basin-subsidence-publication/decisions.md`的U9。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录。当前清单为：
 
 - `.gitattributes`
@@ -74,6 +76,29 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `tests/data_generation/stage/sea_level/`
 - `data_generation/stage/convergent_uplift/`
 - `tests/data_generation/stage/convergent_uplift/`
+- `data_generation/stage/basin_subsidence/.gitignore`
+- `data_generation/stage/basin_subsidence/README.md`
+- `data_generation/stage/basin_subsidence/METHOD.md`
+- `data_generation/stage/basin_subsidence/SOURCES.md`
+- `data_generation/stage/basin_subsidence/__init__.py`
+- `data_generation/stage/basin_subsidence/common.py`
+- `data_generation/stage/basin_subsidence/prepare.py`
+- `data_generation/stage/basin_subsidence/fit.py`
+- `data_generation/stage/basin_subsidence/spatial.py`
+- `data_generation/stage/basin_subsidence/temporal.py`
+- `data_generation/stage/basin_subsidence/sampling_geometry.py`
+- `data_generation/stage/basin_subsidence/window.py`
+- `data_generation/stage/basin_subsidence/resampling.py`
+- `data_generation/stage/basin_subsidence/sampling_diagnostics.py`
+- `data_generation/stage/basin_subsidence/schedule.py`
+- `data_generation/stage/basin_subsidence/pipeline.py`
+- `data_generation/stage/basin_subsidence/templates.py`
+- `data_generation/stage/basin_subsidence/rendering.py`
+- `data_generation/stage/basin_subsidence/verify.py`
+- `data_generation/stage/basin_subsidence/main.py`
+- `data_generation/stage/basin_subsidence/run.ps1`
+- `data_generation/stage/basin_subsidence/open_gallery.ps1`
+- `tests/data_generation/stage/basin_subsidence/`
 - `data_generation/stage/rifting/.gitignore`
 - `data_generation/stage/rifting/README.md`
 - `data_generation/stage/rifting/IMPLEMENTATION.md`

@@ -11,7 +11,7 @@
 .\lem-env-win\Scripts\python.exe tests\run.py --group time_api
 ```
 
-无 `--group` 时运行 13 组默认软件测试。`time_api` 使用已保存的汇聚事件数据；概率模型研究核查、数值步长实验和性能矩阵需显式选择。性能矩阵需提供运行参数，例如 `--group benchmarks -- --steps 5 --rounds 1`。以上命令示例不代表已经执行这些数值实验。
+无 `--group` 时运行 14 组默认软件测试。`time_api` 使用已保存的汇聚事件数据；概率模型研究核查、数值步长实验和性能矩阵需显式选择。性能矩阵需提供运行参数，例如 `--group benchmarks -- --steps 5 --rounds 1`。以上命令示例不代表已经执行这些数值实验。
 
 解释器与各组搜索路径保存在 `suites.json`：查看器使用 `lem-env-win`，已有生成实现使用 `lem-env`，独立阶段使用 D 会话的既有环境。测试运行器会在计算环境缺少 pytest 时，从查看器环境中读取已安装的 pytest 及纯 Python 辅助依赖，追加位置位于计算环境自身库之后。各阶段在独立进程中执行，避免同名模块相互影响。
 
@@ -24,8 +24,10 @@
 | 位置 | 内容 |
 |---|---|
 | viewer | 查看器回归 |
-| data_generation/stage | 当前六个生成阶段的测试 |
+| data_generation/stage | 当前分阶段生成模块的测试 |
 | experiments/lem_pipeline | 旧流程测试、步长收敛、海洋求解器诊断和结果判定 |
 | benchmarks | 环境检查、性能测试和报告生成；原结果仍位于根目录 bench/results |
 
 背景垂向运动的测试随本地源码保存；其目录迁移没有扩大该阶段的公开范围。
+
+沉降独立模块通过`--group basin_subsidence`运行19项程序测试，覆盖概率抽样、连续求值、生命周期积分、触发、窗口面积条件和加权选位。使用已有`lem-env`中的NumPy、SciPy、Numba及项目可用的Shapely；现有D环境的Shapely复用方式见[模块说明](../data_generation/stage/basin_subsidence/README.md)。该组的默认测试使用合成夹具；保存的正式事件另由模块`-Stage audit`核查，`run_pilots.py`属于显式运行的数值试验。

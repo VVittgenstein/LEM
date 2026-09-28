@@ -25,9 +25,13 @@
 
 本次数值工作聚焦计算网格参数选择与性能验证，既定地质生成逻辑保持。选窗与断层生成的理论关系、当前实现顺序，以及本轮调参范围见[对话归档](docs/sessions/2026-09-21-rifting-numerical-closeout-55c795ef/conversation.md)和[文档同步依据](docs/work/2026-09-21-rifting-document-sync/decisions.md)。
 
-后续继续推进数据2其他活动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+2026-09-28，数据2中的[沉降独立输入模块](data_generation/stage/basin_subsidence/README.md)已实现直接生成完整成熟期参考场、保存事件时间历史、500 km窗口查询及A至E展示。窗口采用边界穿越候选、10%至70%台地覆盖筛选、小事件下限豁免和尺寸相关的进入概率衰减；50%覆盖起连续减权。8个数据域的11个事件、74个时间画面及追加的4组图均已保存，19项程序测试与对应批次产物核查通过。方法、设计取值与验证范围见[沉降规则](final-strategy/architecture-dataflow.md#basin-subsidence-events)。
+
+后续继续推进走滑等其余活动工作、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
 
 The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. The convergent-uplift input pipeline was accepted on 2026-09-17. Each trigger creates an independent event with its own spatial field, placement and lifecycle. The delivered batch contains 13 events across eight domains. Remaining activity types, other input classes, LEM integration and end-state validation continue separately.
+
+As of 2026-09-28, the basin subsidence input module provides complete reference fields, fixed event histories, probabilistic window selection and A to E figures. Its 19 program tests and saved-product checks pass. These checks cover the independent input implementation; full LEM integration and end-state validation continue separately.
 
 ## 早期项目概述 / Early Project Overview
 
@@ -119,6 +123,7 @@ loop work before doing heavier feature engineering.
 data_generation/
   stage/                    当前分阶段数据生成模块
     rifting/                裂谷时变作用、断层和构造U，独立阶段已收口
+    basin_subsidence/       沉降完整参考场、事件历史与窗口采样
   pipeline/                 后续完整集成实现的预留目录
 experiments/                旧完整流程、Landlab 实验与 Fastscape 示例
 references/                 外部参考资料及来源索引

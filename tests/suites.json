@@ -103,6 +103,15 @@
       "default": true,
       "description": "background_uplif"
     },
+    "basin_subsidence": {
+      "kind": "unittest",
+      "environment": "compute",
+      "paths": ["."],
+      "test_dir": "tests/data_generation/stage/basin_subsidence",
+      "pattern": "test_*.py",
+      "default": true,
+      "description": "Independent basin-event probability, geometry and time contracts"
+    },
     "convergence_axis": {
       "kind": "unittest",
       "environment": "stages",
