@@ -1,21 +1,14 @@
-# Git 本地保护与公开发布规则
+# Git 与发布规则
 
-## 1. 仓库结构
+## 适用范围
 
-项目只使用 `F:\LEM\.git` 一个本地 Git 仓库，不创建第二个仓库或 linked worktree。
+- 仓库：`F:\LEM\.git`。项目只使用这一个本地 Git 仓库，不创建第二个仓库或 linked worktree。
+- 分支约定：`private` 保存完整的本地工作历史，包含公开文件以及历史记录、研究材料等本地材料，无 upstream，禁止推送到公开远端。`public` 保存代码、必要的项目计划、当前进展与项目规则，具体路径见本文件“公开范围”。
+- 远端及用途：`origin`，远端实际分支名为 `main`；`public` 映射到 `origin/main`。本地配置固定使用 `remote.origin.push = refs/heads/public:refs/heads/main`。
 
-| 分支 | 内容 | 远端关系 |
-|---|---|---|
-| `private` | 保存完整的本地工作历史，包含公开文件以及历史记录、研究材料等本地材料。 | 无 upstream，禁止推送到公开远端。 |
-| `public` | 保存代码、必要的项目计划、当前进展与项目规则，具体路径见第 3 节。 | 映射到 `origin/main`。 |
+## 规则
 
-本地配置固定使用：
-
-```text
-remote.origin.push = refs/heads/public:refs/heads/main
-```
-
-## 2. `.gitignore`
+### 本地版本保护
 
 `.gitignore` 只用于排除无需版本保护的未跟踪文件。它不决定 push 范围。
 
@@ -28,7 +21,9 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 最终策略、current、Agent 规则、`docs/` 和 `references/` 继续在 `private` 分支中被跟踪。公开范围内的文件同时进入 `public`，两个分支分别保留各自的提交历史。
 
-## 3. 公开范围
+### 公开范围
+
+项目代码、`final-strategy/`、`current/`、`AGENTS.md`、`CLAUDE.md`、`project-rules/` 与策略迁移入口 `final-strategy.md` 同时进入 `private` 和 `public`。`docs/` 与 `references/` 保留在 `private`；数据集、生成产物和环境按 `.gitignore` 排除。完整公开路径清单见下文和 `project-rules/public-paths.txt`。公开文件中的本地来源引用不改变被引用材料的公开状态。
 
 2026-09-09，yZz 要求修改 public/private 分配并推送，将必备的项目计划纳入公开范围，明确列出 `final-strategy/`、`current.md`、`AGENTS.md`、`CLAUDE.md`。这些文件直接引用的 `project-rules/` 与策略迁移入口 `final-strategy.md` 一并公开，使公开副本具备完整的项目规则和入口。
 
@@ -40,6 +35,8 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 2026-09-28，yZz要求更新本轮沉降工作的current和项目文档，阅读Git规则后提交并推送。此次公开范围为沉降生成、参数拟合、窗口候选与选择、事件查询、显示和核查源码，专用测试及README、METHOD、SOURCES等必要说明，具体文件列于下方清单。WORK_LOG、会话归档、用户附件、归档适配器及发布过程记录保留private；原始资料副本、拟合包、数组、图像和缓存按忽略规则排除。现有无关修改保持。本轮原话与原始行定位见`docs/work/2026-09-28-basin-subsidence-publication/decisions.md`的U9。
 
+2026-09-29，项目系统按 project-system 1.0.1 更新：任务记录由根目录 `current.md` 拆分到 `current/` 目录（索引、各任务文件与 archive），根目录 `current.md` 删除，`current/` 纳入公开范围；`project-rules/` 新增的规则索引、文档维护规则、外部指向规则和 `pre-automation-reading/` 按既有 `project-rules/` 目录规则公开；`.link/` 与 `references/items/` 保留在 `private`。迁移清单及 yzz 的批准原话保存在 `docs/work/2026-09-29-project-system-update/`。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录。当前清单为：
 
 - `.gitattributes`
@@ -49,7 +46,7 @@ remote.origin.push = refs/heads/public:refs/heads/main
 - `pyproject.toml`
 - `AGENTS.md`
 - `CLAUDE.md`
-- `current.md`
+- `current/`
 - `final-strategy.md`
 - `final-strategy/`
 - `project-rules/`
@@ -141,34 +138,7 @@ remote.origin.push = refs/heads/public:refs/heads/main
 
 新增公开文件、公开文案或扩大范围需要 yZz 明确批准。
 
-## 4. 发布限制
-
-1. 只允许 `refs/heads/public` 推送到 `refs/heads/main`。
-2. 禁止推送 `private`、其他分支、tag 或全部 refs。
-3. 禁止使用 `git push --all`、`git push --mirror` 和绕过 pre-push 检查的参数。
-4. 推送前检查待发送提交的文件树和提交历史。
-5. 检查待发送的每个提交的完整文件树；出现公开清单之外的文件时停止推送并报告。公开文件内的本地路径引用按第 3 节处理。
-6. 禁止合并、推送或以其他方式使 `private` 独有的提交历史进入公开远端。公开提交以已有 `public` 提交为父提交，从已提交的 `private` 快照中选取公开文件。
-
-版本化检查脚本为 `project-rules/pre-push`，安装到本地 `.git/hooks/pre-push` 后检查远端名、ref 映射、快进关系和待发送历史的文件树。检查使用待推送提交中的 `project-rules/public-paths.txt`。`.gitattributes` 固定这两个文件使用 LF 换行。不得通过关闭或绕过 hook 发布。
-
-## 5. 单工作目录发布流程
-
-1. 核对现有修改与后台写入。在 `private` 提交本次工作快照，记录用于发布的提交号。保留与本次发布无关的修改；后台后来产生的文件留到下一次提交。
-2. 按 yZz 当前指令确定本次公开范围和文本。用户已明确要求公开并推送指定文件时，使用其当前内容；不重复请求同一范围的批准。新增范围须更新第 3 节和公开路径清单。
-3. 核对 `origin/main` 与本地 `public`。正常发布只作快进推送。
-4. 首选在同一 `.git` 中使用临时 `GIT_INDEX_FILE`：由已提交的 `private` 快照读取文件树，只保留公开路径，检查差异后用 `git write-tree` 与 `git commit-tree` 创建以当前 `public` 为唯一父提交的公开提交。用带旧提交号校验的 `git update-ref` 更新 `public`。当前工作目录、当前分支与常规索引保持在 `private`；不创建第二个仓库或 linked worktree。
-5. 对照公开清单和来源快照，核对公开提交的路径、文件内容、父提交与待发送历史。同步安装并测试 pre-push 检查。
-6. 执行普通 `git push origin`。本地 refspec 和 pre-push 检查只允许 `public` 到 `origin/main`。
-7. 用远端查询确认 `origin/main` 等于本地 `public`，并复核当前分支和工作树状态。
-
-没有后台任务且工作树为空时，也可以在同一工作目录切换到 `public`，只取回公开清单中的路径并提交，推送后切回 `private`。`private` 独有文件会在切换期间暂时移除，因此使用前必须确认没有任务依赖这些文件。
-
-## 6. 提交身份
-
-提交沿用仓库现有的 yZz 身份。不得添加 Agent 共同作者、Agent 提交作者或 Contributors 署名。
-
-## 7. 既有公开贡献历史
+#### 既有公开贡献历史
 
 为保留31415在体素查看器中的真实提交作者记录，允许将 `origin/litho-3d-and-map-viewer` 的下列两个既有公开提交历史并入public：
 
@@ -178,3 +148,36 @@ remote.origin.push = refs/heads/public:refs/heads/main
 该项使用以现有public和上述公开分支为父提交的合并记录，当前程序源码保持。通过普通快进推送更新origin/main，不修改既有提交作者、时间或已发布提交，不引入private独有历史。
 
 这两条完整提交号保存在 `project-rules/public-history-commits.txt`。pre-push仍逐条检查待发布提交的完整文件树；仅这两条不可变历史提交按其自身保存的公开路径清单核验，其他提交继续按待推送public版本的当前清单核验。该例外不允许在当前文件树恢复旧目录，也不得自动追加其他历史提交。
+
+### 提交与署名
+
+沿用本项目已经确定的提交身份，遵守 AGENTS 中的 Agent 署名限制。具体身份与记录要求：提交沿用仓库现有的 yZz 身份。不得添加 Agent 共同作者、Agent 提交作者或 Contributors 署名。
+
+## 操作与记录
+
+### 发布限制
+
+1. 只允许 `refs/heads/public` 推送到 `refs/heads/main`。
+2. 禁止推送 `private`、其他分支、tag 或全部 refs。
+3. 禁止使用 `git push --all`、`git push --mirror` 和绕过 pre-push 检查的参数。
+4. 推送前检查待发送提交的文件树和提交历史。
+5. 检查待发送的每个提交的完整文件树；出现公开清单之外的文件时停止推送并报告。公开文件内的本地路径引用按本文件“公开范围”处理。
+6. 禁止合并、推送或以其他方式使 `private` 独有的提交历史进入公开远端。公开提交以已有 `public` 提交为父提交，从已提交的 `private` 快照中选取公开文件。
+
+版本化检查脚本为 `project-rules/pre-push`，安装到本地 `.git/hooks/pre-push` 后检查远端名、ref 映射、快进关系和待发送历史的文件树。检查使用待推送提交中的 `project-rules/public-paths.txt`。`.gitattributes` 固定这两个文件使用 LF 换行。不得通过关闭或绕过 hook 发布。
+
+### 单工作目录发布流程
+
+1. 核对现有修改与后台写入。在 `private` 提交本次工作快照，记录用于发布的提交号。保留与本次发布无关的修改；后台后来产生的文件留到下一次提交。
+2. 按 yZz 当前指令确定本次公开范围和文本。用户已明确要求公开并推送指定文件时，使用其当前内容；不重复请求同一范围的批准。新增范围须更新本文件“公开范围”和公开路径清单。
+3. 核对 `origin/main` 与本地 `public`。正常发布只作快进推送。
+4. 首选在同一 `.git` 中使用临时 `GIT_INDEX_FILE`：由已提交的 `private` 快照读取文件树，只保留公开路径，检查差异后用 `git write-tree` 与 `git commit-tree` 创建以当前 `public` 为唯一父提交的公开提交。用带旧提交号校验的 `git update-ref` 更新 `public`。当前工作目录、当前分支与常规索引保持在 `private`；不创建第二个仓库或 linked worktree。
+5. 对照公开清单和来源快照，核对公开提交的路径、文件内容、父提交与待发送历史。同步安装并测试 pre-push 检查。
+6. 执行普通 `git push origin`。本地 refspec 和 pre-push 检查只允许 `public` 到 `origin/main`。
+7. 用远端查询确认 `origin/main` 等于本地 `public`，并复核当前分支和工作树状态。
+
+没有后台任务且工作树为空时，也可以在同一工作目录切换到 `public`，只取回公开清单中的路径并提交，推送后切回 `private`。`private` 独有文件会在切换期间暂时移除，因此使用前必须确认没有任务依赖这些文件。
+
+提交或发布前核对：待发送提交的完整文件树不含公开路径清单之外的文件；公开提交以当前 `public` 为唯一父提交，不引入 `private` 独有历史；pre-push 检查已安装且未被绕过；推送后用远端查询确认 `origin/main` 等于本地 `public`。
+
+本文件记录实际存在或已经确定的机制；未确定的远端、分支或公开范围如实注明。

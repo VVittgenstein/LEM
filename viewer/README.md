@@ -66,4 +66,4 @@ Python 回归：
 
 该检查覆盖九种显示组合、两个体素进程、高度级数与比例、键盘及焦点、数值编辑、显示位关闭与恢复、窗口尺寸及最小化恢复、异常退出和进程回收。参数 `--display-size 512` 可用于检查完整 500×500 示例，示例数据须已在本地保存。C++ 核心检查包含非等距网格、平坦与负高程、无效值、水位、精度变化、相机缩放、分配长度及溢出检查。
 
-2026-09-18，yZz确认3D体素查看器合并及本轮交互调整完成，任务状态为已完成，见 [T-012](../current.md#t-012)和[完成确认原话](../docs/work/2026-09-18-viewer-merge-closeout/decisions.md#u1)。实现来源见 [合并工作记录](../docs/work/2026-09-18-voxel-viewer-merge/README.md)；最新145项Python回归、C++核心及Windows/OpenGL集成检查见 [最终调整记录](../docs/work/2026-09-18-viewer-value-input/README.md)。
+2026-09-18，yZz确认3D体素查看器合并及本轮交互调整完成，任务状态为已完成，见 [T-012](../current/archive/T-012.md)和[完成确认原话](../docs/work/2026-09-18-viewer-merge-closeout/decisions.md#u1)。实现来源见 [合并工作记录](../docs/work/2026-09-18-voxel-viewer-merge/README.md)；最新145项Python回归、C++核心及Windows/OpenGL集成检查见 [最终调整记录](../docs/work/2026-09-18-viewer-value-input/README.md)。

@@ -5,7 +5,7 @@ launch_terrain_viewer.bat
 pyproject.toml
 AGENTS.md
 CLAUDE.md
-current.md
+current/
 final-strategy.md
 final-strategy/
 project-rules/

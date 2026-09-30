@@ -1,10 +1,10 @@
 # LEM-Diffusion / LEM-Diffusion 地形生成项目
 
-当前项目计划以 [`final-strategy/README.md`](final-strategy/README.md) 为入口，任务与阶段进展见 [`current.md`](current.md)，项目协作规则见 [`AGENTS.md`](AGENTS.md) 和 [`project-rules/`](project-rules)。以下内容包含项目早期概述；当前范围与状态以最终策略和台账为准。计划与台账中的部分来源保存在本地会话或参考材料中，公开仓库不包含这些来源全文。
+当前项目计划以 [`final-strategy/README.md`](final-strategy/README.md) 为入口，任务与阶段进展见 [`current/`](current/README.md)，项目协作规则见 [`AGENTS.md`](AGENTS.md) 和 [`project-rules/`](project-rules)。以下内容包含项目早期概述；当前范围与状态以最终策略和台账为准。计划与台账中的部分来源保存在本地会话或参考材料中，公开仓库不包含这些来源全文。
 
 ## 当前状态 / Current Status
 
-2026-09-18，yZz确认**全仓代码结构与存储位置修复**和**3D体素查看器合并**两项工程任务均已完成。任务与完成依据见 [T-011](current.md#t-011)、[T-012](current.md#t-012)；当前查看器说明见 [viewer/README.md](viewer/README.md)。其他研究、数据生成与训练任务沿用下述状态。
+2026-09-18，yZz确认**全仓代码结构与存储位置修复**和**3D体素查看器合并**两项工程任务均已完成。任务与完成依据见 [T-011](current/archive/T-011.md)、[T-012](current/archive/T-012.md)；当前查看器说明见 [viewer/README.md](viewer/README.md)。其他研究、数据生成与训练任务沿用下述状态。
 
 已合并的查看器提供两个独立显示位，可分别选择二维地图、三维表面或三维体素，也可关闭其中一个并从菜单恢复。C++体素高度级数可调，垂直放大为1时采用统一物理尺度；普通数值框、焦点恢复、图例布局及Fly滚轮缩放等本轮交互调整已纳入完成范围。使用、构建和验证说明见 [viewer/README.md](viewer/README.md)。
 
