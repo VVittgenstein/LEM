@@ -28,6 +28,6 @@
 | experiments/lem_pipeline | 旧流程测试、步长收敛、海洋求解器诊断和结果判定 |
 | benchmarks | 环境检查、性能测试和报告生成；原结果仍位于根目录 bench/results |
 
-背景垂向运动的测试随本地源码保存；其目录迁移没有扩大该阶段的公开范围。
+背景垂向运动的测试位于 `tests/data_generation/stage/background_uplif/`，通过 `--group background` 运行。
 
 沉降独立模块通过`--group basin_subsidence`运行19项程序测试，覆盖概率抽样、连续求值、生命周期积分、触发、窗口面积条件和加权选位。使用已有`lem-env`中的NumPy、SciPy、Numba及项目可用的Shapely；现有D环境的Shapely复用方式见[模块说明](../data_generation/stage/basin_subsidence/README.md)。该组的默认测试使用合成夹具；保存的正式事件另由模块`-Stage audit`核查，`run_pilots.py`属于显式运行的数值试验。

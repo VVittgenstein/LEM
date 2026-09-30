@@ -8,7 +8,7 @@
 | [stage/seafloor_generator](stage/seafloor_generator/README.md) | 海域类型分配 |
 | [stage/initial_bathymetry](stage/initial_bathymetry/README.md) | 初始海底高程 |
 | [stage/sea_level](stage/sea_level/README.md) | 年代海平面曲线 |
-| [stage/background_uplif](stage/background_uplif/README.md) | 背景垂向运动，本地阶段实现 |
+| [stage/background_uplif](stage/background_uplif/README.md) | 背景垂向运动 |
 | [stage/convergent_uplift](stage/convergent_uplift/README.md) | 汇聚带空间场与独立事件 |
 | [stage/basin_subsidence](stage/basin_subsidence/README.md) | 沉降成熟期参考场、独立事件、固定窗口及A至E展示 |
 | [stage/rifting](stage/rifting/README.md) | 大、小尺度作用、时变应力、条件断层与构造U，独立阶段已收口 |

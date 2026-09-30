@@ -27,7 +27,7 @@
 
 2026-09-28，数据2中的[沉降独立输入模块](data_generation/stage/basin_subsidence/README.md)已实现直接生成完整成熟期参考场、保存事件时间历史、500 km窗口查询及A至E展示。窗口采用边界穿越候选、10%至70%台地覆盖筛选、小事件下限豁免和尺寸相关的进入概率衰减；50%覆盖起连续减权。8个数据域的11个事件、74个时间画面及追加的4组图均已保存，19项程序测试与对应批次产物核查通过。方法、设计取值与验证范围见[沉降规则](final-strategy/architecture-dataflow.md#basin-subsidence-events)。
 
-2026-09-29，yZz确认数据2中除走滑错动外的活动均已完成，背景垂向运动与盆地沉降据此记为完成，记录见 [T-010](current/T-010.md)；背景垂向运动的源码保留在private。
+2026-09-29，yZz确认数据2中除走滑错动外的活动均已完成，[背景垂向运动](data_generation/stage/background_uplif/README.md)与盆地沉降据此记为完成，记录见 [T-010](current/T-010.md)。
 
 后续继续推进走滑错动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
 
@@ -129,6 +129,7 @@ data_generation/
     seafloor_generator/     深浅海类型分配
     initial_bathymetry/     初始海底
     sea_level/              海平面
+    background_uplif/       背景垂向运动
     convergent_uplift/      汇聚带抬升
     rifting/                裂谷时变作用、断层和构造U，独立阶段已收口
     basin_subsidence/       沉降完整参考场、事件历史与窗口采样
@@ -153,7 +154,7 @@ current/                    任务记录与进展
 project-rules/              协作与发布规则
 ```
 
-`references/`、`docs/`、`explainer/` 与背景垂向运动模块只在本地 private 分支中，公开仓库不包含。
+`references/`、`docs/` 与 `explainer/` 只在本地 private 分支中，公开仓库不包含。
 
 目录入口：[数据生成](data_generation/README.md)、[实验与旧流程](experiments/README.md)、[参考资料](references/README.md)、[训练数据集](datasets/README.md)、[查看器](viewer/README.md)、[训练](training/README.md)、[测试](tests/README.md)。阶段的具体实现与后续完整管线分开组织；完整管线运行须独立于 stage 的代码。datasets 位于项目根目录，与 references 平级，专用于模型训练数据。
 

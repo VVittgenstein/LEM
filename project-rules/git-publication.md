@@ -61,6 +61,10 @@
 
 2026-09-30，yzz 指出规则遗漏后问：“对，source/是可以被跟踪、提交到private里的，只是不push，我理解的对吗？”Agent 确认并展示上文 `sources/` 排除条目、“本地版本保护”第 5 项与继续跟踪一条的文字，yzz 回复“可以写”。此前各生成模块用 `.gitignore` 排除整个 `sources/`，使其中的资料不被跟踪；本条起这些资料由 Git 在 `private` 跟踪，由排除条目保持不公开。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`（2026-09-30 10:00:24Z 至 10:07:47Z）；改动清单见 `docs/work/2026-09-30-git-rule-clarification/`。
 
+2026-09-30，yzz 指出背景垂向运动模块位于 `data_generation/` 下，属于项目代码，应当公开，原话：“你理解一下这个东西的位置和性质行不行？这肯定是要public的啊，你在说什么啊？F:\LEM\data_generation里都是”。该模块此前未公开，源于 2026-09-17 汇聚带抬升发布与 2026-09-18 目录迁移时 Agent 划定的范围，记录中没有 yzz 的相应决定。`data_generation/stage/background_uplif/` 及 `tests/data_generation/stage/background_uplif/` 加入公开路径清单；`output/` 仍按忽略规则排除。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`，2026-09-30T10:47:26Z。
+
+同日，Agent 列出 `data_generation/` 下另外 13 个被跟踪但未公开的文件；这些文件的私有状态同样来自 2026-09-21 与 2026-09-28 发布时 Agent 划定的范围。yzz 问“你觉得呢？这13个？”，Agent 建议公开裂谷的 8 份模块文档与 Notebook 及沉降的 `WORK_LOG.md`，裂谷 `scripts/conversation_archive/` 中的会话归档导出器副本保留 `private`；yzz 回复“1.对，对话记录这种是一定private 2.保存对话，更新readme，提交然后push”。据此上述 10 个文件加入公开路径清单；会话归档、对话记录及其导出工具副本保留 `private`。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`，2026-09-30T10:53:55Z 至 11:01:41Z。
+
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录，以 `!` 开头的条目为排除条目。当前清单为：
 
 - `.gitattributes`
@@ -95,12 +99,15 @@
 - `tests/data_generation/stage/initial_bathymetry/`
 - `data_generation/stage/sea_level/`
 - `tests/data_generation/stage/sea_level/`
+- `data_generation/stage/background_uplif/`
+- `tests/data_generation/stage/background_uplif/`
 - `data_generation/stage/convergent_uplift/`
 - `tests/data_generation/stage/convergent_uplift/`
 - `data_generation/stage/basin_subsidence/.gitignore`
 - `data_generation/stage/basin_subsidence/README.md`
 - `data_generation/stage/basin_subsidence/METHOD.md`
 - `data_generation/stage/basin_subsidence/SOURCES.md`
+- `data_generation/stage/basin_subsidence/WORK_LOG.md`
 - `data_generation/stage/basin_subsidence/__init__.py`
 - `data_generation/stage/basin_subsidence/common.py`
 - `data_generation/stage/basin_subsidence/prepare.py`
@@ -124,6 +131,15 @@
 - `data_generation/stage/rifting/README.md`
 - `data_generation/stage/rifting/IMPLEMENTATION.md`
 - `data_generation/stage/rifting/VISUALIZATION_SPEC.md`
+- `data_generation/stage/rifting/GAPS.md`
+- `data_generation/stage/rifting/IMPLEMENTATION_PLAN.md`
+- `data_generation/stage/rifting/METHOD_REVIEW.md`
+- `data_generation/stage/rifting/NUMERICAL_CLOSEOUT.md`
+- `data_generation/stage/rifting/PARAMETER_EVIDENCE.md`
+- `data_generation/stage/rifting/REPORT.md`
+- `data_generation/stage/rifting/SCOPE.md`
+- `data_generation/stage/rifting/SOURCES.md`
+- `data_generation/stage/rifting/notebooks/evidence_review.ipynb`
 - `data_generation/stage/rifting/open_gallery.ps1`
 - `data_generation/stage/rifting/run_generation.ps1`
 - `data_generation/stage/rifting/run.ps1`
