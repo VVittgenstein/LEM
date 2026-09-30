@@ -31,7 +31,7 @@ Thumbs.db
 .env
 .claude/
 
-# Benchmark generated artifacts (arrays, renders, stores); scripts, logs and JSON results stay tracked
+# Benchmark generated artifacts (arrays, renders, stores); scripts and JSON results stay tracked, run logs are excluded below
 bench/results/**/exports/
 bench/results/**/*.npy
 bench/results/**/*.zarr/
@@ -40,3 +40,20 @@ bench/results/**/*.png
 # Model-training data; the directory purpose is documented in version control.
 datasets/*
 !datasets/README.md
+
+# Run logs written by programs (project-rules/git-publication.md). Work logs, reading and download records stay
+# tracked; logs inside reference packages stay tracked with their package.
+*.log
+*.err
+job-logs/
+!/references/**/*.log
+/docs/work/2026-09-09-q1-pretasks/F-periphery-150km/logs/
+
+# Images, archives and arrays generated in work records (GUI test screenshots, check figures, pre-change backups)
+/docs/work/**/*.png
+/docs/work/**/*.svg
+/docs/work/**/*.jpg
+/docs/work/**/*.jpeg
+/docs/work/**/*.zip
+/docs/work/**/*.npy
+/docs/work/**/*.npz

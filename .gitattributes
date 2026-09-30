@@ -11,5 +11,8 @@ docs/work/2026-09-28-conversation-archive-16ac7f94/** -text
 docs/work/2026-09-29-project-system-update/originals/** -text
 references/2026-09-13-geological-activity-parameters/** -text
 references/2026-09-15-convergence-axis-examples/** -text
+references/paper/*/** -text
+references/code/*/** -text
+data_generation/stage/**/sources/** -text
 
 project-rules/public-history-commits.txt text eol=lf

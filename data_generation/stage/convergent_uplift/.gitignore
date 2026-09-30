@@ -1,5 +1,15 @@
 __pycache__/
-sources/
+# sources/ of the module and its pipelines: tracked in private and kept out of public by
+# project-rules/public-paths.txt; external data files in them stay out of Git (project-rules/git-publication.md)
+**/sources/**/*.csv
+**/sources/**/*.geojson
+**/sources/**/*.shp
+**/sources/**/*.shx
+**/sources/**/*.dbf
+**/sources/**/*.prj
+**/sources/**/*.cpg
+/field_pipeline/sources/DS5_ENU_velocity.txt
+/time_pipeline/sources/DS5_model.json
 output/
 checks/
 tables/

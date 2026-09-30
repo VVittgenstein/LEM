@@ -88,3 +88,4 @@ experiments/fastscape_examples/
 experiments/README.md
 tests/experiments/__init__.py
 datasets/README.md
+!data_generation/stage/*/sources/

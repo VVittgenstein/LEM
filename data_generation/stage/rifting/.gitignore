@@ -1,5 +1,11 @@
 output/
-sources/
+# sources/: tracked in private and kept out of public by project-rules/public-paths.txt; external data files and
+# check images in it stay out of Git (project-rules/git-publication.md)
+sources/**/*.csv
+sources/**/*.geojson
+sources/**/*.png
+/sources/new/N03/fault_statistics.zip
+/sources/new/N08/stress_magnitudes.zip
 __pycache__/
 .cache/
 conversations/

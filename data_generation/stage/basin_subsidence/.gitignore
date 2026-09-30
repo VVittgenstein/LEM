@@ -1,4 +1,8 @@
-/sources/
+# sources/: tracked in private and kept out of public by project-rules/public-paths.txt; external data files and
+# the copied parameter file stay out of Git (project-rules/git-publication.md)
+/sources/*.csv
+/sources/*.dat
+/sources/bathymetry_parameters.json
 /models/
 /output/
 /checks/

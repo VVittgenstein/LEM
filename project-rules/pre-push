@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # Public paths and publication workflow: project-rules/git-publication.md.
+# public-paths.txt entries: a file path, a directory ending in "/", or an exclusion starting with "!"
+# ("*" matches any characters; an exclusion ending in "/" covers the directory). Exclusions take precedence.
 remote_name="$1"
 zero=0000000000000000000000000000000000000000
 
@@ -48,20 +50,23 @@ do
     rejected=$(printf '%s\n' "$paths" | while IFS= read -r path
     do
       allowed=0
+      excluded=0
       while IFS= read -r rule
       do
         [ -n "$rule" ] || continue
         case "$rule" in
+          !*/) pattern=${rule#!}; case "$path" in $pattern*) excluded=1 ;; esac ;;
+          !*) pattern=${rule#!}; case "$path" in $pattern) excluded=1 ;; esac ;;
           */) case "$path" in "$rule"*) allowed=1 ;; esac ;;
           *) [ "$path" = "$rule" ] && allowed=1 ;;
         esac
       done <<EOF
 $commit_allowlist
 EOF
-      [ "$allowed" = 1 ] || printf '%s\n' "$path"
+      [ "$allowed" = 1 ] && [ "$excluded" = 0 ] || printf '%s\n' "$path"
     done)
     if [ -n "$rejected" ]; then
-      printf 'Files outside the public path list in %s:\n%s\n' "$commit" "$rejected" >&2
+      printf 'Files outside the public path list or under an exclusion in %s:\n%s\n' "$commit" "$rejected" >&2
       reject "private paths must not enter public history."
     fi
   done
