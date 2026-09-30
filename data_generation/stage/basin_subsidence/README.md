@@ -98,4 +98,4 @@ B07原始回剥卸载构造沉降量及七时段速率提供配对数值约束�
 
 源码使用Python 3.12、NumPy、SciPy、Numba、Matplotlib、Pillow、psutil和Shapely。本机沿用`lem-env`与已有D环境的几何库，绘图使用Microsoft YaHei。`prepare`读取本地参考资料和既有汇聚底图、冻结复用模板，`fit`建立参数包，之后执行生成与绘图；本次文档同步和发布没有安装环境或重新拟合。
 
-公开内容包含生成、拟合、窗口采样、查询与核查源码、专用测试及README、METHOD、SOURCES。原始资料、冻结模板副本、拟合包和生成产物按忽略规则保留本地，`WORK_LOG.md`及会话、研究和发布记录保留private。公开仓库中的本地资料与图集链接提供路径定位；复现完整生成需准备对应输入。来源与本轮文档发布依据见[项目来源](../../../final-strategy/sources.md#basin-subsidence-20260928)。
+公开内容包含生成、拟合、窗口采样、查询与核查源码、专用测试及README、METHOD、SOURCES。`sources/` 中的原始资料与冻结模板副本由Git在private跟踪、不公开；其中的数据文件与拟合包、生成产物按忽略规则保留本地，`WORK_LOG.md`及会话、研究和发布记录保留private。公开仓库中的本地资料与图集链接提供路径定位；复现完整生成需准备对应输入。来源与本轮文档发布依据见[项目来源](../../../final-strategy/sources.md#basin-subsidence-20260928)。

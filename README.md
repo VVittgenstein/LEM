@@ -27,11 +27,15 @@
 
 2026-09-28，数据2中的[沉降独立输入模块](data_generation/stage/basin_subsidence/README.md)已实现直接生成完整成熟期参考场、保存事件时间历史、500 km窗口查询及A至E展示。窗口采用边界穿越候选、10%至70%台地覆盖筛选、小事件下限豁免和尺寸相关的进入概率衰减；50%覆盖起连续减权。8个数据域的11个事件、74个时间画面及追加的4组图均已保存，19项程序测试与对应批次产物核查通过。方法、设计取值与验证范围见[沉降规则](final-strategy/architecture-dataflow.md#basin-subsidence-events)。
 
-后续继续推进走滑等其余活动工作、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
+2026-09-29，yZz确认数据2中除走滑错动外的活动均已完成，背景垂向运动与盆地沉降据此记为完成，记录见 [T-010](current/T-010.md)；背景垂向运动的源码保留在private。
+
+后续继续推进走滑错动、数据3、数据5、统一LEM驱动接入及终态验证。完整1A、E1、模型训练和LOD验证保持各自状态。当前策略入口见 [已验收输入阶段](final-strategy/architecture-dataflow.md#initial-input-stages)。
 
 The initial platform-mask input (data class 4) and initial bathymetry and sea-level inputs (data class 1) were accepted on 2026-09-12. The four modules above provide their code, data contracts and local validation records. The convergent-uplift input pipeline was accepted on 2026-09-17. Each trigger creates an independent event with its own spatial field, placement and lifecycle. The delivered batch contains 13 events across eight domains. Remaining activity types, other input classes, LEM integration and end-state validation continue separately.
 
 As of 2026-09-28, the basin subsidence input module provides complete reference fields, fixed event histories, probabilistic window selection and A to E figures. Its 19 program tests and saved-product checks pass. These checks cover the independent input implementation; full LEM integration and end-state validation continue separately.
+
+On 2026-09-29, yZz confirmed that all class-2 activities except strike-slip faulting are complete, including background vertical motion and basin subsidence. Strike-slip faulting, data class 3, data class 5, LEM integration and end-state validation continue.
 
 ## 早期项目概述 / Early Project Overview
 
@@ -97,7 +101,7 @@ levels are structurally aligned. Low-resolution global terrain provides
 world-scale coherence, while higher-resolution tiles add local detail.
 
 
-## 路线图 / Roadmap
+## 早期路线图 / Early Roadmap
 
 ```text
 Phase 1: LEM data generation with Landlab/Fastscape
@@ -110,26 +114,26 @@ Phase 6: Minecraft Java mod integration with native LOD output
 
 **中文**
 
-当前优先级是先把多通道数据生成和训练闭环跑通，再考虑更复杂的特征工程。
+该路线图来自项目早期计划。当前优先开展 1A，范围与验证顺序以[最终策略](final-strategy/README.md)为准。
 
 **English**
 
-The current priority is to make the multi-channel data generation and training
-loop work before doing heavier feature engineering.
+This roadmap comes from the early project plan. The current priority is 1A; scope and validation order follow the [final strategy](final-strategy/README.md).
 
 ## 仓库结构 / Repository Layout
 
 ```text
 data_generation/
   stage/                    当前分阶段数据生成模块
+    mask_generator/         台地掩膜
+    seafloor_generator/     深浅海类型分配
+    initial_bathymetry/     初始海底
+    sea_level/              海平面
+    convergent_uplift/      汇聚带抬升
     rifting/                裂谷时变作用、断层和构造U，独立阶段已收口
     basin_subsidence/       沉降完整参考场、事件历史与窗口采样
   pipeline/                 后续完整集成实现的预留目录
 experiments/                旧完整流程、Landlab 实验与 Fastscape 示例
-references/                 外部参考资料及来源索引
-  data/                     参考数据与派生参考资料
-  paper/                    论文、补充材料和书目信息
-  code/                     外部参考实现及配套资料
 datasets/                   模型训练数据集
 viewer/
   lem_viewer/               查看器 Python 包
@@ -139,13 +143,17 @@ training/                   后续训练实现的预留目录
 tests/
   viewer/
   data_generation/stage/
+  experiments/
   benchmarks/
   run.py                    跨环境集中测试入口
 bench/results/              已有基准结果与报告
-launch_terrain_viewer.bat    Windows 查看器入口
+launch_terrain_viewer.bat   Windows 查看器入口
 final-strategy/             项目最终策略
+current/                    任务记录与进展
 project-rules/              协作与发布规则
 ```
+
+`references/`、`docs/`、`explainer/` 与背景垂向运动模块只在本地 private 分支中，公开仓库不包含。
 
 目录入口：[数据生成](data_generation/README.md)、[实验与旧流程](experiments/README.md)、[参考资料](references/README.md)、[训练数据集](datasets/README.md)、[查看器](viewer/README.md)、[训练](training/README.md)、[测试](tests/README.md)。阶段的具体实现与后续完整管线分开组织；完整管线运行须独立于 stage 的代码。datasets 位于项目根目录，与 references 平级，专用于模型训练数据。
 
