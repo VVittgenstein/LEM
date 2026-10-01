@@ -2,4 +2,3 @@ __pycache__/
 output/
 checks/matplotlib_cache/
 /models/
-/manifest.json

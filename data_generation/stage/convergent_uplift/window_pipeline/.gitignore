@@ -1,8 +1,10 @@
-/inputs/
+# inputs/: the copies made by prepare.py stay out of Git; manifest.json, the record of the window pipeline inputs,
+# is tracked in private and kept out of public by project-rules/public-paths.txt
+/inputs/*
+!/inputs/manifest.json
 /vendor/
 /bases/
 /output/
 /pilot*/
 /checks/
 /__pycache__/
-/manifest.json

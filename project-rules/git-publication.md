@@ -2,15 +2,82 @@
 
 ## 适用范围
 
+适用于本项目的 Git 仓库、分支、提交、公开范围与推送，包括仓库尚未建立的阶段。以下各项记录本项目的实际状态，尚未建立或尚未确定的如实写明。
+
 - 仓库：`F:\LEM\.git`。项目只使用这一个本地 Git 仓库，不创建第二个仓库或 linked worktree。
-- 分支约定：`private` 保存完整的本地工作历史，包含公开文件以及历史记录、研究材料等本地材料，无 upstream，禁止推送到公开远端。`public` 保存代码、必要的项目计划、当前进展与项目规则，具体路径见本文件“公开范围”。
-- 远端及用途：`origin`，远端实际分支名为 `main`；`public` 映射到 `origin/main`。本地配置固定使用 `remote.origin.push = refs/heads/public:refs/heads/main`。
+- 分支：`private` 与 `public` 分别承担本规则中的 private 与 public 角色。`private` 保存完整的本地工作历史，包含公开文件以及历史记录、研究材料等本地材料，无 upstream，禁止推送到公开远端。`public` 保存代码、必要的项目计划、当前进展与项目规则，具体路径见本文件“公开范围”。
+- 远端：`origin`（`https://github.com/VVittgenstein/LEM`），远端实际分支名为 `main`；`public` 映射到 `origin/main`。本地配置固定使用 `remote.origin.push = refs/heads/public:refs/heads/main`。
+- 公开路径清单与推送检查脚本：[public-paths.txt](public-paths.txt)；[pre-push](pre-push)，安装为 `.git/hooks/pre-push`。既有公开贡献历史的提交号清单为 [public-history-commits.txt](public-history-commits.txt)。
 
 ## 规则
 
 ### 本地版本保护
 
-项目中的全部文件由 Git 在 `private` 分支跟踪和保存，生成文件和外部依赖除外。排除的文件由 `.gitignore` 列出；push 范围由下文“公开范围”和“发布限制”决定。
+1. 项目全部文件由 Git 在 private 分支跟踪，生成文件和外部依赖除外。生成文件指运行程序得到的文件；外部依赖指从本项目以外获取、供程序使用的文件。模型权重按来源归类：本项目训练或拟合得到的属于生成文件，下载的第三方权重属于外部依赖。
+2. 默认不跟踪的类别：
+   1. 模型权重与拟合参数包。
+   2. 训练数据。
+   3. 音频与视频。
+   4. 程序生成的图像、数组、栅格和压缩包，例如渲染图、抽帧、检查图、界面测试截图和备份压缩包。
+   5. 程序运行的输出目录。
+   6. 运行日志：程序运行时写出的日志与错误输出。
+   7. 外部依赖：供程序读取的外部数据、下载的第三方程序与模型权重、虚拟环境与安装的依赖包。
+   8. 凭据：密钥、令牌、Cookie 与 .env 等文件。
+   9. 缓存与本地文件：语言缓存、构建和测试缓存，IDE、操作系统和本地工具的状态文件。
+3. 继续跟踪：代码与配置；说明文档；AGENTS、CLAUDE、current、final-strategy、project-rules 与 .link；docs 中的会话归档、工作记录及其中的文字报告和结果表；references 中的资料说明、来源记录与原件，其中供程序读取的外部数据按第 2 项处理；用户提供的截图与附件；记录外部依赖与生成文件来源的清单，例如下载地址与 SHA-256。
+4. .gitignore 只列不跟踪的文件。无法归入以上类别的文件，列出清单由 yzz 确认。
+
+### 公开范围
+
+1. 全部文件默认只在 private。public 只包含公开路径清单中的路径。
+2. 公开路径清单每行一个条目：文件路径表示该文件，末尾带 / 的路径表示整个目录，以 ! 开头的条目为排除条目。排除条目优先，其中 * 匹配任意字符。
+3. 新增公开路径、公开文案或扩大公开范围须 yzz 明确批准。
+4. 需要跟踪但不公开的文件留在 private，公开范围由公开路径清单及其排除条目控制。
+5. public 不含 private 独有的提交历史。首个 public 提交为无父提交的根提交；此后的 public 提交以现有 public 提交为唯一父提交，内容从已提交的 private 快照中选取公开路径。
+
+### 提交与署名
+
+沿用本项目已经确定的提交身份，遵守 AGENTS 中的 Agent 署名限制。新建仓库的提交身份由 yzz 指定。
+
+## 操作与记录
+
+### 建立仓库
+
+仓库尚未建立时，yzz 要求建立后按以下顺序执行：
+
+1. 在项目根目录执行 git init，当前分支命名为 private。
+2. 按“本地版本保护”检查项目文件并生成 .gitignore，无法归类的文件按该节第 4 项处理。
+3. 按 yzz 指定的身份设置本仓库的 user.name 与 user.email。
+4. 核对 .gitattributes、公开路径清单与推送检查脚本，在 private 提交首个快照。
+5. 按“更新 public”第 2 项的方法从该快照选取公开路径，创建无父提交的根提交，再用 git update-ref 建立 public。
+6. 将推送检查脚本复制为 .git/hooks/pre-push，并以模拟输入测试放行与拒绝两类情况。
+7. 更新“适用范围”的仓库与分支。
+
+### 对齐已有仓库
+
+已有仓库与本规则不一致时，列出差异由 yzz 确认后处理：被忽略或未跟踪的项目文件，.gitignore 中用于控制公开的条目，已有分支与 private、public 的对应，公开路径清单与推送检查脚本的位置，以及提交身份。已有分支名、远端和工作树保持，对应关系写入“适用范围”。
+
+### 日常提交
+
+在 private 提交。提交前检查 Git 状态，确认待提交内容的范围。
+
+### 更新 public
+
+1. 在 private 提交本次快照并记录提交号。
+2. 使用临时 GIT_INDEX_FILE 从该快照读取文件树，只保留公开路径清单中的路径并去掉排除条目下的文件，检查差异后用 git write-tree 与 git commit-tree 创建以当前 public 为唯一父提交的公开提交，再用带旧提交号校验的 git update-ref 更新 public。当前分支、工作目录与常规索引保持在 private。
+3. 对照公开路径清单与来源快照，核对公开提交的路径、内容与父提交。
+
+### 添加远端与推送
+
+1. 添加远端由 yzz 决定仓库位置与可见性，默认位于 AGENTS 所列 yzz 的 GitHub 账户下。先更新“适用范围”的远端，再执行。
+2. 远端名为 origin，本地配置 remote.origin.push = refs/heads/public:refs/heads/main，只允许 public 推送到远端 main。
+3. 推送前确认推送检查已安装，推送经过该检查；推送后用远端查询确认远端 main 等于本地 public。
+
+提交或发布前核对：待提交内容不含不跟踪类别的文件与凭据；public 的每个提交只含公开路径清单中的路径；public 不含 private 独有的提交历史；当前分支为 private。
+
+本项目补充：以下为本项目的具体约定、获准例外与批准记录，取自 2026-10-01 按 project-system 1.1.0-dev.1 整理前本文件的原文，按主题排列。
+
+**本地版本保护**
 
 术语采用构建工具 Bazel 文档的文件分类。生成文件（generated files，也称派生文件、输出文件）指运行程序得到的文件，项目中已有的“生成产物”指这一类。外部依赖（external dependencies）指从本项目以外获取、供程序使用的文件。模型权重按来源归类：本项目训练或拟合得到的属于生成文件，下载的第三方权重属于外部依赖。
 
@@ -35,11 +102,9 @@
 - 用户提供的截图与附件。
 - 记录外部依赖与生成文件来源的清单，例如下载地址与 SHA-256。
 
-公开范围内的文件同时进入 `public`，两个分支分别保留各自的提交历史。
-
 2026-09-30，yzz 澄清本规则。原话：“我的想法是所有的文件都要被git跟踪、保存，但是模型权重、生成的东西可以不进git”；“日志也排除”；“音频、视频可以和模型权重理解为相同的东西，所以排除”；对名称“生成文件和外部依赖”回复“可以”。`bench/results` 中的运行日志是否排除，yzz 回复“呃，我不知道，我感觉无所谓，你帮我选一个吧”，Agent 按最后一次表态“日志也排除”选择排除。论文与参考代码原件的处理方案，yzz 回复“支持”。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`（2026-09-30 07:39:02Z 至 09:20:59Z）；改动清单见 `docs/work/2026-09-30-git-rule-clarification/`。
 
-### 公开范围
+**公开范围**
 
 项目代码、`final-strategy/`、`current/`、`AGENTS.md`、`CLAUDE.md`、`project-rules/` 与策略迁移入口 `final-strategy.md` 同时进入 `private` 和 `public`。`docs/`、`references/` 与 `explainer/` 保留在 `private`；生成文件和外部依赖按“本地版本保护”排除。完整公开路径清单见下文和 `project-rules/public-paths.txt`。公开文件中的本地来源引用不改变被引用材料的公开状态。
 
@@ -64,6 +129,10 @@
 2026-09-30，yzz 指出背景垂向运动模块位于 `data_generation/` 下，属于项目代码，应当公开，原话：“你理解一下这个东西的位置和性质行不行？这肯定是要public的啊，你在说什么啊？F:\LEM\data_generation里都是”。该模块此前未公开，源于 2026-09-17 汇聚带抬升发布与 2026-09-18 目录迁移时 Agent 划定的范围，记录中没有 yzz 的相应决定。`data_generation/stage/background_uplif/` 及 `tests/data_generation/stage/background_uplif/` 加入公开路径清单；`output/` 仍按忽略规则排除。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`，2026-09-30T10:47:26Z。
 
 同日，Agent 列出 `data_generation/` 下另外 13 个被跟踪但未公开的文件；这些文件的私有状态同样来自 2026-09-21 与 2026-09-28 发布时 Agent 划定的范围。yzz 问“你觉得呢？这13个？”，Agent 建议公开裂谷的 8 份模块文档与 Notebook 及沉降的 `WORK_LOG.md`，裂谷 `scripts/conversation_archive/` 中的会话归档导出器副本保留 `private`；yzz 回复“1.对，对话记录这种是一定private 2.保存对话，更新readme，提交然后push”。据此上述 10 个文件加入公开路径清单；会话归档、对话记录及其导出工具副本保留 `private`。来源：本会话源 JSONL `0c6e6646-cd3c-489a-903d-947040ead3fb`，2026-09-30T10:53:55Z 至 11:01:41Z。
+
+2026-10-01，项目系统更新核对中，Agent 指出汇聚带抬升模块收尾时由 `build_delivery.py` 及三个子管线的 `finish.py` 写出的 4 个文件清单被模块 `.gitignore` 排除。这 4 个文件为 `module_manifest.json` 及 `field_pipeline/`、`time_pipeline/`、`window_pipeline/` 下的 `manifest.json`，记录目录内各文件的路径、字节数与 SHA-256；“本地版本保护”第 1 项与第 3 项对它们的结论相反。yzz 回复：“第一类应该跟踪，但是不进public”。据此删去模块 `.gitignore` 中排除这 4 个文件的行，由 Git 在 `private` 跟踪；公开路径清单增加对应的 4 个排除条目，保持不公开。来源：会话源 JSONL `8bd37ead-5644-4555-88d9-c87dc895da78`，2026-10-01T05:36:50Z；改动清单见 `docs/work/2026-10-01-project-system-update/`。
+
+同日，`window_pipeline/inputs/manifest.json` 由 `window_pipeline/prepare.py` 写出，记录窗口管线的输入：复制来的代码与参数，以及直接读取的文件，各附 SHA-256，用于确认输入没有被改动。yzz 回复：“和第一类一样的处理”。据此该文件同样由 Git 在 `private` 跟踪：`window_pipeline/.gitignore` 中的 `/inputs/` 改为 `/inputs/*` 并加入 `!/inputs/manifest.json`，`inputs/` 中的 3 个副本继续排除；公开路径清单增加对应的排除条目，保持不公开。来源：会话源 JSONL `8bd37ead-5644-4555-88d9-c87dc895da78`，2026-10-01T05:45:12Z。
 
 公开路径清单保存在 `project-rules/public-paths.txt`。文件名表示该文件，末尾带 `/` 的路径表示整个目录，以 `!` 开头的条目为排除条目。当前清单为：
 
@@ -170,6 +239,11 @@
 - `tests/experiments/__init__.py`
 - `datasets/README.md`
 - `!data_generation/stage/*/sources/`
+- `!data_generation/stage/convergent_uplift/module_manifest.json`
+- `!data_generation/stage/convergent_uplift/field_pipeline/manifest.json`
+- `!data_generation/stage/convergent_uplift/time_pipeline/manifest.json`
+- `!data_generation/stage/convergent_uplift/window_pipeline/manifest.json`
+- `!data_generation/stage/convergent_uplift/window_pipeline/inputs/manifest.json`
 
 2026-09-18，按本轮已获执行授权的目录迁移方案，将原公开代码及对应测试映射到上述新位置，并纳入配套的目录说明与集中测试入口。原始历史路径在前文事件记录中保留。本地背景垂向运动源码及其测试继续排除，冻结资源、模型包和生成产物延续既有边界。本轮没有执行 Git 提交或远端发布。迁移依据与核查记录见 `docs/work/2026-09-18-directory-migration/`。
 
@@ -177,9 +251,7 @@
 
 2026-09-18，按用户随后明确的分类纠正，将三组旧流程与实验移至 `experiments`，相应测试移至 `tests/experiments`。`datasets` 专用于训练数据；外部参考原件归入 `references` 的分类目录。本次修正没有执行提交或推送。
 
-新增公开文件、公开文案或扩大范围需要 yZz 明确批准。
-
-#### 既有公开贡献历史
+**既有公开贡献历史**
 
 为保留31415在体素查看器中的真实提交作者记录，允许将 `origin/litho-3d-and-map-viewer` 的下列两个既有公开提交历史并入public：
 
@@ -190,13 +262,11 @@
 
 这两条完整提交号保存在 `project-rules/public-history-commits.txt`。pre-push仍逐条检查待发布提交的完整文件树；仅这两条不可变历史提交按其自身保存的公开路径清单核验，其他提交继续按待推送public版本的当前清单核验。该例外不允许在当前文件树恢复旧目录，也不得自动追加其他历史提交。
 
-### 提交与署名
+**提交与署名**
 
-沿用本项目已经确定的提交身份，遵守 AGENTS 中的 Agent 署名限制。具体身份与记录要求：提交沿用仓库现有的 yZz 身份。不得添加 Agent 共同作者、Agent 提交作者或 Contributors 署名。
+具体身份与记录要求：提交沿用仓库现有的 yZz 身份。不得添加 Agent 共同作者、Agent 提交作者或 Contributors 署名。
 
-## 操作与记录
-
-### 发布限制
+**发布限制**
 
 1. 只允许 `refs/heads/public` 推送到 `refs/heads/main`。
 2. 禁止推送 `private`、其他分支、tag 或全部 refs。
@@ -207,18 +277,12 @@
 
 版本化检查脚本为 `project-rules/pre-push`，安装到本地 `.git/hooks/pre-push` 后检查远端名、ref 映射、快进关系和待发送历史的文件树。检查使用待推送提交中的 `project-rules/public-paths.txt`，包括其中的排除条目。`.gitattributes` 固定这两个文件使用 LF 换行。不得通过关闭或绕过 hook 发布。
 
-### 单工作目录发布流程
+**单工作目录发布流程**
 
 1. 核对现有修改与后台写入。在 `private` 提交本次工作快照，记录用于发布的提交号。保留与本次发布无关的修改；后台后来产生的文件留到下一次提交。
 2. 按 yZz 当前指令确定本次公开范围和文本。用户已明确要求公开并推送指定文件时，使用其当前内容；不重复请求同一范围的批准。新增范围须更新本文件“公开范围”和公开路径清单。
 3. 核对 `origin/main` 与本地 `public`。正常发布只作快进推送。
-4. 首选在同一 `.git` 中使用临时 `GIT_INDEX_FILE`：由已提交的 `private` 快照读取文件树，只保留公开路径并去掉排除条目下的文件，检查差异后用 `git write-tree` 与 `git commit-tree` 创建以当前 `public` 为唯一父提交的公开提交。用带旧提交号校验的 `git update-ref` 更新 `public`。当前工作目录、当前分支与常规索引保持在 `private`；不创建第二个仓库或 linked worktree。
+4. 在同一 `.git` 中使用临时 `GIT_INDEX_FILE`：由已提交的 `private` 快照读取文件树，只保留公开路径并去掉排除条目下的文件，检查差异后用 `git write-tree` 与 `git commit-tree` 创建以当前 `public` 为唯一父提交的公开提交。用带旧提交号校验的 `git update-ref` 更新 `public`。当前工作目录、当前分支与常规索引保持在 `private`；不创建第二个仓库或 linked worktree。
 5. 对照公开清单和来源快照，核对公开提交的路径、文件内容、父提交与待发送历史。同步安装并测试 pre-push 检查。
 6. 执行普通 `git push origin`。本地 refspec 和 pre-push 检查只允许 `public` 到 `origin/main`。
 7. 用远端查询确认 `origin/main` 等于本地 `public`，并复核当前分支和工作树状态。
-
-没有后台任务且工作树为空时，也可以在同一工作目录切换到 `public`，只取回公开清单中的路径并提交，推送后切回 `private`。`private` 独有文件会在切换期间暂时移除，因此使用前必须确认没有任务依赖这些文件。
-
-提交或发布前核对：待发送提交的完整文件树不含公开路径清单之外或排除条目下的文件；公开提交以当前 `public` 为唯一父提交，不引入 `private` 独有历史；pre-push 检查已安装且未被绕过；推送后用远端查询确认 `origin/main` 等于本地 `public`。
-
-本文件记录实际存在或已经确定的机制；未确定的远端、分支或公开范围如实注明。

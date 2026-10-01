@@ -101,3 +101,8 @@ experiments/README.md
 tests/experiments/__init__.py
 datasets/README.md
 !data_generation/stage/*/sources/
+!data_generation/stage/convergent_uplift/module_manifest.json
+!data_generation/stage/convergent_uplift/field_pipeline/manifest.json
+!data_generation/stage/convergent_uplift/time_pipeline/manifest.json
+!data_generation/stage/convergent_uplift/window_pipeline/manifest.json
+!data_generation/stage/convergent_uplift/window_pipeline/inputs/manifest.json

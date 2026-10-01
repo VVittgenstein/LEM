@@ -2,7 +2,7 @@
 
 ## 项目
 
-- 用户：yzz。
+- 用户：yzz（GitHub 主页 [VVittgenstein](https://github.com/VVittgenstein)）。
 - 项目概况：LEM-Diffusion 地形生成项目：先用地貌演化模型（LEM）生成训练数据，再训练扩散模型生成具有真实感与多样性的地形；产品形态为 Minecraft Java Edition 模组，模型以 ONNX 等通用格式保持引擎独立。当前 MVP 的研究、数据生成与训练范围为 L1，每份样本为 500 km×500 km 的有限海洋大陆；数据生成以 Fastscape 线为主要管线，当前优先开展 1A：不利用 DEM 反推，获得生成 L1 训练数据的完整方法。
 
 ## 文件身份
@@ -35,9 +35,9 @@
 | 新增、记录或归档任务 | [任务记录规则](project-rules/current-ledger.md)。 |
 | 更新最终策略 | [策略编写规则](project-rules/strategy-writing.md)。 |
 | 登记或维护外部指向 | [外部指向规则](project-rules/external-links.md)。 |
+| Git、提交、上传或发布 | [Git 与发布规则](project-rules/git-publication.md)。 |
 | 判断批准、执行授权或验收状态 | [权限与批准规则](project-rules/authority-and-approval.md)。 |
 | 判断 yzz 是否批准、否决或说过某项内容 | [证据与归属规则](project-rules/evidence-attribution.md)及原始历史记录。 |
-| Git、提交、上传或发布 | [Git 与发布规则](project-rules/git-publication.md)。 |
 | 对外发送消息或发布文字 | [权限与批准规则](project-rules/authority-and-approval.md)及获得批准的确切文本。 |
 
 ## 工作规则
@@ -65,11 +65,12 @@
 18. yzz 对具体最终策略内容明确同意或批准后，Agent 自动将获准内容写入 final-strategy/；这一写入范围已由本规则明确授权。
 19. 开始自动化任务之前，阅读 project-rules/pre-automation-reading/。
 20. 参考资料按共同格式记录来源、用途、获取、阅读和核验情况，保留原件与说明的关联及原始内容。会话与历史记录按实际来源保存。
-21. 发生冲突时按第 21 至 25 条的先后适用。yzz 当前的明确指令具有最高优先级。
-22. `AGENTS.md` 和 `project-rules/` 约束 Agent 行为、批准判断和文件编写。
-23. `final-strategy/` 约束项目目标、范围、架构和验证顺序。
-24. `current/` 记录当前 TODO 和进展，不改变策略。
-25. 历史记录用于确认来源和时间顺序。发生冲突时，回查最后一次有效的 yzz 表态。
+21. 能通过修改出错的文字消除错误时，直接修改该文字。修改后其余文字已经排除的行为，不再追加禁止或否定该行为的句子。
+22. 发生冲突时按第 22 至 26 条的先后适用。yzz 当前的明确指令具有最高优先级。
+23. `AGENTS.md` 和 `project-rules/` 约束 Agent 行为、批准判断和文件编写。
+24. `final-strategy/` 约束项目目标、范围、架构和验证顺序。
+25. `current/` 记录当前 TODO 和进展，不改变策略。
+26. 历史记录用于确认来源和时间顺序。发生冲突时，回查最后一次有效的 yzz 表态。
 
 ## current/ 摘要规则
 
